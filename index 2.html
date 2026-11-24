@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dezembro 2026 · Calendário Interativo Aure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F4FC; --bg2:#FFFFFF; --card:#FFFFFF; --card2:#FFFFFF; --line:#E6DEF5;
+  --tx:#1E1535; --tx2:#5B5275; --tx3:#8A80AA;
+  --roxo:#8B5CF6; --roxo2:#6D28D9;
+  --natal:#F0545A; --rev:#F5B83D; --vip:#2EC4A6; --dica:#C4A5FF; --prazo:#FFFFFF; --loja:#9B93B8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.mont{font-family:Montserrat,system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:40px 28px 80px}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:center;margin-bottom:36px}
+.eyebrow{font-family:Montserrat;font-weight:800;letter-spacing:4px;font-size:12px;color:var(--roxo)}
+.hero h1{font-size:clamp(44px,7vw,92px);line-height:.92;margin:10px 0 14px;font-weight:900;letter-spacing:-2px}
+.hero h1 span{display:block;background:linear-gradient(90deg,#6D28D9 0%,#8B5CF6 60%,#B794F6 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--tx2);font-size:17px;line-height:1.55;max-width:560px;margin:0 0 22px}
+.store{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.store label{font-size:13px;font-weight:600;color:var(--tx2)}
+.store input{background:var(--card);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:13px 16px;font-size:16px;min-width:260px;outline:none;transition:border-color .2s,box-shadow .2s}
+.store input:focus{border-color:var(--roxo);box-shadow:0 0 0 4px rgba(139,92,246,.25)}
+.counts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.count{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:0 2px 0 #EDE6F8}
+.count b{color:#5B21B6}
+.count b{display:block;font-family:Montserrat;font-size:34px;font-weight:900;line-height:1}
+.count small{color:var(--tx2);font-size:12px;font-weight:600;letter-spacing:.5px}
+
+/* FILTERS */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 20px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:13px;font-weight:600;color:var(--tx2);transition:all .2s}
+.chip .dot{width:10px;height:10px;border-radius:50%}
+.chip[aria-pressed="true"]{background:var(--roxo2);color:#fff;border-color:var(--roxo2)}
+.chip:hover{transform:translateY(-2px)}
+
+/* CALENDAR */
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;}
+.wd{font-family:Montserrat;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--tx3);padding:0 6px 4px}
+.day{position:relative;min-height:138px;text-align:left;background:#fff;box-shadow:0 2px 0 #EDE6F8;border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .25s,opacity .3s,filter .3s;will-change:transform}
+.day:hover{box-shadow:0 24px 50px -18px rgba(109,40,217,.35);border-color:#C9B6F2}
+.day:focus-visible{outline:3px solid var(--roxo);outline-offset:3px}
+.day .num{font-family:Montserrat;font-size:30px;font-weight:900;line-height:1}
+.day .wdm{display:none}
+.day .ttl{font-size:13px;font-weight:600;color:var(--tx2);line-height:1.35}
+.day .ics{display:flex;gap:6px;margin-top:auto}
+.ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center}
+.ic svg{width:15px;height:15px}
+.day.static{cursor:default}.day.static:hover{box-shadow:0 2px 0 #EDE6F8;border-color:var(--line)}
+.day.empty{background:transparent;border:1px dashed var(--line);pointer-events:none}
+.day.out{opacity:.55}
+.day.big{border:none}
+.day.natalDay{background:linear-gradient(150deg,#F0545A,#A3162B)}
+.day.revDay{background:linear-gradient(150deg,#F5B83D,#B7791F)}
+.day.anoDay{background:linear-gradient(150deg,#8B5CF6,#4C1D95)}
+.day.big .ttl{color:#fff;font-family:Montserrat;font-weight:900;font-size:20px;letter-spacing:1px}
+.day.dim{opacity:.18;filter:grayscale(.8)}
+.day.deadline::after{content:"PRAZO";position:absolute;top:12px;right:12px;font-family:Montserrat;font-size:10px;font-weight:900;letter-spacing:2px;background:#1E1535;color:#fff;border-radius:6px;padding:4px 7px}
+.today{box-shadow:0 0 0 2px var(--rev) inset}
+
+/* DRAWER */
+.scrim{position:fixed;inset:0;background:rgba(30,21,53,.45);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .35s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(980px,100%);background:var(--bg2);border-left:1px solid var(--line);z-index:21;transform:perspective(1400px) rotateY(-28deg) translateX(110%);transform-origin:100% 50%;transition:transform .6s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.drawer.on{transform:perspective(1400px) rotateY(0) translateX(0)}
+.dhead{display:flex;align-items:flex-start;gap:18px;padding:26px 30px 18px;border-bottom:1px solid var(--line)}
+.dnum{font-family:Montserrat;font-weight:900;font-size:64px;line-height:.85}
+.dmeta{flex:1}
+.dmeta .wdl{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--tx3);text-transform:uppercase}
+.dmeta h2{margin:6px 0 8px;font-size:24px;font-weight:800}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;border-radius:6px;padding:4px 8px;letter-spacing:.4px}
+.close{background:var(--card);border:1px solid var(--line);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.close svg{width:18px;height:18px}
+.nav{display:flex;gap:8px}
+.tabs{display:flex;gap:6px;padding:14px 30px 0;flex-wrap:wrap}
+.tab{background:transparent;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;color:var(--tx2);display:flex;align-items:center;gap:8px}
+.tab svg{width:15px;height:15px}
+.tab[aria-selected="true"]{background:var(--roxo2);border-color:var(--roxo2);color:#fff}
+.dbody{flex:1;overflow:auto;padding:24px 30px 40px}
+.pane{display:grid;grid-template-columns:340px 1fr;gap:34px;align-items:start;animation:paneIn .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes paneIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.pane h3{margin:0 0 6px;font-size:20px;font-weight:800}
+.lead{color:var(--tx2);font-size:15px;line-height:1.55;margin:0 0 18px}
+
+/* PHONE */
+.phoneStage{perspective:1200px;display:flex;justify-content:center}
+.phone{width:300px;height:610px;border-radius:44px;background:#0A0614;padding:12px;box-shadow:0 0 0 2px #3A2E5E,0 40px 80px -24px rgba(30,21,53,.45);transform:rotateY(-14deg) rotateX(4deg);transition:transform .4s ease;transform-style:preserve-3d}
+.screen{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:#0B141A;display:flex;flex-direction:column}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:24px;background:#000;border-radius:14px;z-index:3}
+/* whatsapp */
+.wahead{background:#1F2C34;padding:40px 14px 10px;display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#5B21B6);display:grid;place-items:center;font-family:Montserrat;font-weight:900;font-size:14px;color:#fff;flex:none}
+.wname{font-size:14px;font-weight:600;color:#E9EDEF;line-height:1.2}
+.wsub{font-size:11px;color:#8696A0}
+.chat{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:6px;overflow:hidden;background:#0B141A radial-gradient(circle at 20% 20%,rgba(255,255,255,.025) 0 2px,transparent 3px) 0 0/22px 22px}
+.daychip{align-self:center;background:#182229;color:#8696A0;font-size:10.5px;padding:4px 10px;border-radius:7px;margin-bottom:4px}
+.bub{align-self:flex-start;max-width:86%;background:#202C33;color:#E9EDEF;font-size:12.5px;line-height:1.42;padding:7px 9px 18px;border-radius:0 10px 10px 10px;position:relative;white-space:pre-line;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.bub .tm{position:absolute;right:8px;bottom:4px;font-size:9.5px;color:#8696A0}
+.bub.img{padding:4px 4px 18px}
+.ph{width:200px;height:150px;border-radius:8px;display:grid;place-items:center;text-align:center;font-family:Montserrat;font-weight:800;font-size:12px;color:#fff;padding:10px}
+.typing{align-self:flex-start;background:#202C33;border-radius:0 10px 10px 10px;padding:10px 12px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#8696A0;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(8px)}to{opacity:1;transform:none}}
+.wafoot{background:#1F2C34;padding:8px 10px 18px;display:flex;gap:8px;align-items:center}
+.wafoot div{flex:1;background:#2A3942;border-radius:20px;height:34px;color:#8696A0;font-size:12px;display:flex;align-items:center;padding:0 14px}
+.wafoot span{width:34px;height:34px;border-radius:50%;background:#00A884;display:grid;place-items:center}
+.wafoot svg{width:16px;height:16px}
+
+/* side text blocks */
+.msgbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;white-space:pre-line;font-size:14.5px;line-height:1.55;color:var(--tx)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{background:var(--roxo);border:none;border-radius:12px;padding:12px 18px;font-weight:700;font-size:14px;color:#fff;display:inline-flex;gap:8px;align-items:center;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:var(--card);border:1px solid var(--line)}
+.btn svg{width:16px;height:16px}
+.tips{display:grid;gap:10px;margin-top:18px}
+.tip{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;color:var(--tx2)}
+.tip b{color:var(--tx)}
+.tip .k{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:Montserrat;font-weight:900;font-size:12px}
+.k.ok{background:rgba(46,196,166,.18);color:var(--vip)}
+.k.no{background:rgba(240,84,90,.18);color:var(--natal)}
+.k.n{background:rgba(139,92,246,.14);color:#6D28D9}
+
+/* video */
+.vframe{position:relative;flex:1;background:#000;overflow:hidden}
+.scene{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;transition:opacity .4s,transform .6s}
+.scene .shotlbl{font-family:Montserrat;font-weight:900;font-size:22px;line-height:1.1}
+.scene .shotsub{font-size:12px;color:rgba(255,255,255,.8);margin-top:8px;line-height:1.4}
+.rec{position:absolute;top:44px;left:16px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;z-index:2}
+.rec i{width:9px;height:9px;border-radius:50%;background:#F0545A;animation:recb 1s infinite}
+@keyframes recb{50%{opacity:.2}}
+.timer{position:absolute;top:44px;right:16px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.4);border-radius:6px;padding:3px 7px;z-index:2}
+.thirds{position:absolute;inset:0;pointer-events:none;z-index:1;background:
+ linear-gradient(to right,transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px)),
+ linear-gradient(to bottom,transparent calc(33.33% - .5px),rgba(255,255,255,.22) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px),transparent calc(66.66% - .5px),rgba(255,255,255,.22) calc(66.66% - .5px) calc(66.66% + .5px),transparent calc(66.66% + .5px))}
+.safe{position:absolute;left:8%;right:8%;top:14%;bottom:20%;border:1.5px dashed rgba(255,255,255,.35);border-radius:10px;z-index:1;pointer-events:none}
+.prog{position:absolute;left:12px;right:12px;bottom:18px;display:flex;gap:4px;z-index:2}
+.prog i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.25);overflow:hidden;position:relative}
+.prog i b{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:0 50%}
+.prog i.done b{transform:scaleX(1)}
+.prog i.run b{animation:fill linear forwards}
+@keyframes fill{to{transform:scaleX(1)}}
+.takes{display:grid;gap:10px}
+.take{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:all .25s}
+.take .tn{width:34px;height:34px;border-radius:10px;background:var(--card2);display:grid;place-items:center;font-family:Montserrat;font-weight:900}
+.take b{display:block;font-size:14px}
+.take span{font-size:13px;color:var(--tx2);line-height:1.4}
+.take em{font-style:normal;font-size:12px;font-weight:700;color:var(--tx3)}
+.take.cur{border-color:var(--roxo);background:linear-gradient(90deg,rgba(139,92,246,.22),var(--card));transform:translateX(6px)}
+.take.cur .tn{background:var(--roxo);color:#fff}
+
+/* photo */
+.vf{position:relative;flex:1;background:#14101E;overflow:hidden}
+.prod{position:absolute;left:58%;top:56%;width:120px;height:120px;transform:translate(-50%,-50%) rotate(-8deg);border-radius:18px;display:grid;place-items:center;text-align:center;font-family:Montserrat;font-weight:800;font-size:12px;color:#fff;box-shadow:30px 30px 40px -10px rgba(0,0,0,.6)}
+.focus{position:absolute;width:70px;height:70px;border:2px solid #FFD54A;border-radius:4px;z-index:2;animation:focus 4.5s ease-in-out infinite}
+@keyframes focus{0%{left:20%;top:25%;transform:scale(1.4);opacity:0}25%{left:20%;top:25%;transform:scale(1);opacity:1}55%{left:calc(58% - 35px);top:calc(56% - 35px);transform:scale(1.15)}65%,100%{left:calc(58% - 35px);top:calc(56% - 35px);transform:scale(1);opacity:1}}
+.sun{position:absolute;left:10%;top:12%;width:46px;height:46px;border-radius:50%;background:radial-gradient(#FFE9A8,#F5B83D);box-shadow:0 0 50px 14px rgba(245,184,61,.35);z-index:1}
+.ray{position:absolute;left:18%;top:20%;width:42%;height:2px;background:linear-gradient(90deg,rgba(255,233,168,.8),transparent);transform-origin:0 0;transform:rotate(32deg);z-index:1}
+.shutter{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;border:4px solid #fff;z-index:2}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:3;animation:flash 4.5s infinite}
+@keyframes flash{0%,70%{opacity:0}72%{opacity:.8}80%,100%{opacity:0}}
+
+/* story */
+.story{flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:60px 22px 30px;overflow:hidden}
+.sbar{position:absolute;top:40px;left:12px;right:12px;height:3px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
+.sbar b{display:block;height:100%;background:#fff;animation:fill 6s linear infinite;transform-origin:0 50%}
+.sl{font-family:Montserrat;font-weight:900;color:#fff;line-height:1.1;opacity:0;animation:rise .6s forwards}
+@keyframes rise{from{opacity:0;transform:translateY(20px) rotate(-2deg)}to{opacity:1;transform:none}}
+.sticker{align-self:flex-start;background:#fff;color:#140C2A;border-radius:14px;padding:12px 14px;font-size:13px;font-weight:700;opacity:0;animation:rise .6s forwards;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.sticker small{display:block;font-weight:500;color:#666;margin-top:6px;background:#EEE;border-radius:8px;padding:7px}
+
+/* checklist */
+.check{display:grid;gap:10px}
+.ck{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:15px;text-align:left;width:100%}
+.ck .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--tx3);display:grid;place-items:center;flex:none;transition:all .2s}
+.ck[aria-pressed="true"] .box{background:var(--vip);border-color:var(--vip)}
+.ck[aria-pressed="true"] .box svg{opacity:1;transform:scale(1)}
+.ck .box svg{width:14px;height:14px;opacity:0;transform:scale(.4);transition:all .2s}
+.ck[aria-pressed="true"] span{color:var(--tx3);text-decoration:line-through}
+
+
+/* script */
+.script{max-width:960px;animation:paneIn .5s cubic-bezier(.2,.8,.2,1)}
+.shead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.shead h3{margin:6px 0 0;font-size:24px;font-weight:800}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.mt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.mt small{display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--tx3);text-transform:uppercase}
+.mt b{display:block;font-size:14px;margin-top:4px;line-height:1.35}
+.scns{display:grid;gap:12px;counter-reset:s}
+.scn{display:grid;grid-template-columns:86px 1fr;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;opacity:0;animation:rise .5s forwards}
+.scnum{background:linear-gradient(170deg,var(--roxo),var(--roxo2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 6px}
+.scnum b{font-family:Montserrat;font-size:36px;font-weight:900;line-height:1}
+.scnum small{font-size:11px;font-weight:700;opacity:.85;text-align:center}
+.scbody{padding:14px 18px 16px}
+.scttl{font-family:Montserrat;font-weight:800;font-size:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.scttl span{font-family:Inter;font-size:12px;font-weight:700;color:#6D28D9;background:rgba(139,92,246,.12);border-radius:6px;padding:4px 8px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.cols small{display:block;font-size:10.5px;font-weight:800;letter-spacing:1.2px;color:var(--tx3);text-transform:uppercase;margin-bottom:4px}
+.cols p{margin:0;font-size:14px;line-height:1.5;color:var(--tx2)}
+.fala p{color:var(--tx);font-style:italic}
+.tela p{color:#B45309;font-weight:700}
+.before{margin-top:18px;background:rgba(139,92,246,.06);border:1px dashed #C9B6F2;border-radius:16px;padding:14px 18px}
+.before small{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#6D28D9}
+.before ul{margin:8px 0 0;padding-left:18px;color:var(--tx2);font-size:14px;line-height:1.6}
+@media (max-width:760px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}.scn{grid-template-columns:64px 1fr}.scnum b{font-size:28px}}
+
+.note{margin:-6px 0 22px;font-size:14px;color:var(--tx2)}.note b{color:var(--tx)}
+.bands{grid-column:1/-1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));column-gap:12px;row-gap:6px;margin:-2px 0 4px}
+.band{border:none;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:700;text-align:left;display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .2s,box-shadow .2s}
+.band span{overflow:hidden;text-overflow:ellipsis}
+.band svg{width:14px;height:14px;flex:none}
+button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(30,21,53,.35)}
+.b-natal{background:#FDE7E8;color:#A3162B}.b-rev{background:#FDF1D6;color:#7A4E06}.b-prazo{background:#1E1535;color:#fff}.b-vip{background:#DDF5F0;color:#0B5E55}
+.day.we{background:repeating-linear-gradient(135deg,#fff 0 10px,#FAF8FD 10px 20px)}
+.day .wetag{font-size:10.5px;font-weight:700;color:var(--tx3);letter-spacing:.5px}
+.rangebox{display:flex;gap:10px;align-items:center;margin-top:10px;background:#1E1535;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;width:fit-content;max-width:100%;border:none}
+.rangebox svg{width:15px;height:15px;flex:none}
+.vids{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.vbtn{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:13px;font-weight:700;color:var(--tx2)}
+.vbtn[aria-pressed="true"]{background:#1E1535;border-color:#1E1535;color:#fff}
+@media (max-width:760px){.bands{grid-template-columns:1fr}.band{grid-column:auto!important;white-space:normal}}
+
+.rots{display:grid;gap:14px}
+.rot{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 2px 0 #EDE6F8;opacity:0;animation:rise .5s forwards}
+.rhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rnum{width:40px;height:40px;border-radius:12px;background:linear-gradient(160deg,var(--roxo),var(--roxo2));color:#fff;display:grid;place-items:center;font-family:Montserrat;font-weight:900;font-size:20px}
+.rtit{flex:1;min-width:160px}.rtit small{display:block;font-size:10.5px;font-weight:800;letter-spacing:1.5px;color:var(--tx3)}.rtit b{font-family:Montserrat;font-size:18px}
+.rdur{font-size:12px;font-weight:700;color:#6D28D9;background:rgba(139,92,246,.12);border-radius:6px;padding:5px 9px}
+.rcp{padding:8px 12px;font-size:13px;color:var(--tx)}
+.rpart{border-left:3px solid;padding:4px 0 4px 14px;margin-top:10px}
+.rpart small{font-size:10.5px;font-weight:800;letter-spacing:1.5px}
+.rpart p{margin:4px 0 0;font-size:15.5px;line-height:1.6;color:var(--tx)}
+.rpart.g{border-color:#E0353C}.rpart.g small{color:#C0262D}
+.rpart.d{border-color:#8B5CF6}.rpart.d small{color:#6D28D9}
+.rpart.c{border-color:#0F9F87}.rpart.c small{color:#0B7A68}
+.tema{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.5px;color:#A3162B;background:#FDE7E8;border-radius:6px;padding:5px 9px;margin-bottom:10px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:#1E1535;color:#fff;font-weight:700;border-radius:12px;padding:12px 18px;z-index:40;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
+.toast.on{transform:translate(-50%,0)}
+.foot{margin-top:40px;color:var(--tx3);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr}
+  .pane{grid-template-columns:1fr}.phoneStage{order:-1}
+  .phone{transform:none}
+}
+@media (max-width:760px){
+  .wrap{padding:24px 16px 60px}
+  .grid{grid-template-columns:1fr;transform:none}
+  .wd,.day.empty{display:none}
+  .day{min-height:auto;display:grid;grid-template-columns:62px 1fr auto;align-items:center}
+  .day .num{grid-row:span 2}
+  .day .wdm{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--tx3)}
+  .day .ics{margin:0;grid-row:span 2;grid-column:3}
+  .day.deadline::after{top:8px;right:8px;font-size:9px}
+  .dhead{padding:20px 18px 14px}.tabs{padding:12px 18px 0}.dbody{padding:18px 18px 40px}
+  .dnum{font-size:48px}
+  .phone{width:270px;height:550px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">AURE DIGITAL · CALENDÁRIO INTERATIVO</div>
+      <h1 class="mont">Dezembro<span>2026</span></h1>
+      <p>Clique num dia ou numa faixa pra ver como o disparo chega no WhatsApp do cliente e os roteiros dos vídeos que a loja precisa enviar pros anúncios.</p>
+      <div class="store">
+        <label for="storeName">Nome da loja</label>
+        <input id="storeName" placeholder="Ex.: Aure Digital" autocomplete="off">
+      </div>
+      </div>
+    <div class="counts">
+      <div class="count"><b id="cNatal">–</b><small>DIAS PRO NATAL</small></div>
+      <div class="count"><b id="cRev">–</b><small>DIAS PRO RÉVEILLON</small></div>
+      <div class="count"><b>04/12</b><small>PRAZO CRIATIVOS NATAL</small></div>
+      <div class="count"><b>11/12</b><small>PRAZO CRIATIVOS RÉVEILLON</small></div>
+    </div>
+  </header>
+
+  <div class="filters" role="toolbar" aria-label="Filtrar dias por tipo de ação" id="filters"></div>
+  <p class="note"><b>Anúncios sobem e são ajustados de segunda a sexta.</b> Sábado e domingo não sobem anúncios.</p>
+
+  <section class="cal" aria-label="Calendário de dezembro">
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <div class="foot"><span>Toque num dia pra abrir o guia completo.</span><span>Aure Digital · Planejamento Dezembro 2026</span></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" aria-hidden="true">
+  <div class="dhead">
+    <div class="dnum" id="dNum"></div>
+    <div class="dmeta">
+      <div class="wdl" id="dWd"></div>
+      <h2 id="dTitle"></h2>
+      <div class="tags" id="dTags"></div>
+      <div id="dRange"></div>
+    </div>
+    <div class="nav">
+      <button class="close" id="prevD" aria-label="Dia anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button class="close" id="nextD" aria-label="Próximo dia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="close" id="closeD" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="dbody" id="dBody"></div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- ICONS ---------- */
+const I = {
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-7 5 7 4-4-2 11H5z"/></svg>',
+  gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M12 9v12M3 13h18M12 9C10 5 6 5 7 8s5 1 5 1 4 2 5-1-3-3-5 1"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1-5H5zM5 10v10h14V10M10 20v-5h4v5"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg>',
+  camera:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z"/><circle cx="12" cy="13" r="4"/></svg>',
+  story:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 7h4M9 12h6"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-13.5 7.8L3 21l1.2-4.4A9 9 0 1121 12z"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>',
+  replay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>'
+};
+
+/* ---------- TYPES ---------- */
+const TY = {
+  prazo:{n:'Produção e prazo', c:'#1E1535', t:'#fff', i:'clock'},
+  dica:{n:'Dica de presente', c:'#8B5CF6', t:'#fff', i:'gift'},
+  vip:{n:'Grupo VIP', c:'#0F9F87', t:'#fff', i:'crown'},
+  natal:{n:'Disparo Natal', c:'#E0353C', t:'#fff', i:'send'},
+  rev:{n:'Disparo Réveillon', c:'#D98E04', t:'#2A1A00', i:'send'},
+  data:{n:'Anúncios e datas', c:'#5B21B6', t:'#fff', i:'star'}
+};
+
+/* ---------- VIDEO GUIDES ---------- */
+const VSETS = {
+  natal:{t:'Roteiros de vídeo · Natal',sub:'Três roteiros completos pra gravar entre 01 e 04/12. A vendedora fala olhando pra câmera, celular em pé.',
+    r:[
+      {n:'Kit de presente',dur:'15 a 20s',
+       g:'"Se você ainda não sabe o que dar de presente esse ano, para tudo e olha isso aqui."',
+       d:'"Aqui na {loja} a gente montou kits prontos pra presente. Esse aqui tem [ITEM 1], [ITEM 2] e [ITEM 3], tudo por [PREÇO], em até [X] vezes. E você já leva embrulhado, sem fila e sem estresse."',
+       c:'"Chama a gente no WhatsApp que eu separo o seu e deixo pronto pra você buscar."'},
+      {n:'Presente pra cada pessoa',dur:'20 a 30s',
+       g:'"Presente pra mãe, pro namorado e pro amigo secreto: resolvi os três em 30 segundos."',
+       d:'"Pra mãe, esse [PRODUTO], confortável e lindo, por [PREÇO]. Pro namorado ou pro pai, esse [PRODUTO], que é o mais procurado da loja. E pro amigo secreto tem opção a partir de [PREÇO]."',
+       c:'"Me conta no WhatsApp pra quem é o presente que eu te mostro mais opções."'},
+      {n:'A loja pronta pro Natal',dur:'15 a 20s',
+       g:'"Vem ver como ficou a {loja} pro Natal."',
+       d:'"A vitrine está montada, os kits estão prontos e a gente separou o que mais está saindo esse mês. Tem [PRODUTO] por [PREÇO] e embrulho de presente na hora, sem custo."',
+       c:'"Passa aqui pra escolher com calma ou chama no WhatsApp que a gente te atende por lá."'}]},
+  rev:{t:'Roteiros de vídeo · Réveillon',sub:'Três roteiros completos pra gravar entre 07 e 11/12. Luz clara e peças brancas e douradas em destaque.',
+    r:[
+      {n:'Look da virada',dur:'15 a 20s',
+       g:'"Já sabe com que roupa você vai virar o ano?"',
+       d:'"Chegaram as peças de Réveillon na {loja}: branco, dourado e sandálias pra começar 2027 com o pé direito. Esse look aqui sai por [PREÇO] e a sandália por [PREÇO]."',
+       c:'"Me chama no WhatsApp que eu te mando todas as opções."'},
+      {n:'Uma sandália pra cada virada',dur:'20 a 25s',
+       g:'"A sua virada vai ser na praia ou em casa? Tenho a sandália certa pros dois."',
+       d:'"Pra quem vai pra praia, essa [PRODUTO], leve e confortável. Pra quem vai passar em casa ou num jantar, essa [PRODUTO], que combina com branco e dourado. A partir de [PREÇO]."',
+       c:'"A numeração está acabando. Chama no WhatsApp e garante a sua."'},
+      {n:'Antes e depois',dur:'10 a 15s',
+       g:'"Do look de todo dia pro look da virada em 3 segundos." (tampa a câmera com a mão e troca de roupa)',
+       d:'"Esse é o look completo de Réveillon da {loja}: [PEÇA], [PEÇA] e [CALÇADO]. Tudo junto sai por [PREÇO]."',
+       c:'"Quer montar o seu? Me chama no WhatsApp que eu te ajudo."'}]},
+  vip:{t:'Roteiros de vídeo · Grupo VIP',sub:'Três roteiros pra mandar direto no grupo entre 14 e 18/12. Tom de conversa, como quem conta um segredo.',
+    r:[
+      {n:'Abertura da antecipação',dur:'20 a 30s',
+       g:'"Oi, gente do VIP! O que eu vou mostrar agora ninguém mais viu."',
+       d:'"Esse é o [PRODUTO]. Chegou essa semana, tenho do [NÚMERO] ao [NÚMERO] e pra quem está aqui no grupo sai por [PREÇO VIP], só até amanhã."',
+       c:'"Quer? Responde aqui com o número da foto que eu separo o seu."'},
+      {n:'Oferta relâmpago',dur:'15 a 20s',
+       g:'"Oferta relâmpago só pro VIP, valendo até as 18h de hoje."',
+       d:'"[PRODUTO] de [PREÇO DE] por [PREÇO VIP]. São poucas peças, então quem responder primeiro leva."',
+       c:'"Responde EU QUERO aqui no grupo que eu já te chamo no privado."'},
+      {n:'Último dia do VIP',dur:'15 a 20s',
+       g:'"Gente, hoje é o último dia das condições do VIP."',
+       d:'"Amanhã essas ofertas vão pra todo mundo e o preço muda. Quem reservou e ainda não buscou, estou segurando até hoje à noite."',
+       c:'"Me chama agora no privado pra garantir o seu."'}]}
+};
+
+/* ---------- DAYS ---------- */
+const MSG = {
+  ant1:['IMG','🎁 *Antecipe o seu presente de Natal!*\n\nQuem compra agora escolhe com calma, encontra todos os números e foge da fila de dezembro 😉\n\nNa {loja} você já encontra:\n✨ Novidades de Natal\n🎀 Embalagem de presente na hora\n💳 Parcelamento facilitado\n\nQuer que eu te mande as opções? Responde aqui!'],
+  ant2:['IMG','⏰ *Faltam 9 dias pro Natal!*\n\nAinda dá tempo de garantir o presente com calma, antes da correria da última semana.\n\nReserva pelo WhatsApp e retira na {loja} já embrulhado 🎁\n\nMe conta pra quem é o presente que eu te ajudo a escolher 😊'],
+  dic1:['IMG','🎁 *Dicas de presente da {loja}*\n\nSeparamos opções pra todo mundo da sua lista:\n\n👩 Pra mãe e avó: [PRODUTO]\n👨 Pra ele: [PRODUTO]\n🎄 Amigo secreto: a partir de [PREÇO]\n👧 Pras crianças: [PRODUTO]\n\nQuer ver as fotos? Me diz pra quem é o presente 😉'],
+  dic2:['IMG','💡 *Sem ideia de presente?*\n\nA gente te ajuda! Presentes até [VALOR] que fazem sucesso:\n\n✨ [PRODUTO 1]\n✨ [PRODUTO 2]\n✨ [PRODUTO 3]\n\nResponde com quanto você quer gastar que eu te mando as opções 🎁'],
+  dic3:['IMG','🎄 *Os presentes mais escolhidos na {loja}*\n\nEssa semana quem passou aqui levou:\n\n1️⃣ [PRODUTO 1]\n2️⃣ [PRODUTO 2]\n3️⃣ [PRODUTO 3]\n\nAinda dá tempo! Quer que eu separe o seu? 🎁'],
+  hor1:['🕒 *Horário especial de Natal na {loja}!*\n\nNeste fim de semana a gente fica aberto por mais tempo pra você fazer suas compras com calma:\n\n📅 Sábado (12/12): [HORÁRIO]\n📅 Domingo (13/12): [HORÁRIO]\n\nVem escolher seu presente! E se preferir, reserva pelo WhatsApp que a gente deixa separado 🎁'],
+  hor2:['🎄 *Último fim de semana antes do Natal!*\n\nA {loja} vai funcionar em horário especial:\n\n📅 Sábado (19/12): [HORÁRIO]\n📅 Domingo (20/12): [HORÁRIO]\n\nFuja da fila: reserva pelo WhatsApp e só passa pra retirar, já embrulhado 🎀'],
+  convite1:['🎄 Oi! Aqui é da {loja}.\n\nVamos abrir o *Grupo VIP de Natal*: quem entrar vê as ofertas antes de todo mundo, de 14 a 18/12.\n\nQuer participar? Responde *SIM* que eu te mando o link 💜'],
+  convite2:['✨ Últimas vagas no Grupo VIP de Natal da {loja}!\n\nNo grupo você recebe as novidades e condições especiais antes de todo mundo.\n\nResponde *EU QUERO* que eu te mando o link 👑'],
+  d14:['IMG','🎄 *O Natal chegou na {loja}!*\n\nSeparamos presentes lindos pra quem você ama, com condições especiais de dezembro:\n\n🎁 Kits prontos pra presente\n💳 Parcelamento facilitado\n🎀 Embalagem de presente na hora\n\nQuer que eu te mostre as opções? Responde aqui 😊'],
+  d16:['IMG','🎁 *Sem ideia de presente?*\n\nA {loja} montou uma seleção pra facilitar:\n\n✨ Presentes até R$ 150\n✨ Pra mãe e avó\n✨ Pra ele\n✨ Amigo secreto\n\nMe conta pra quem é o presente que eu te mando as fotos 😉'],
+  d18:['IMG','🎄 *Fim de semana de Natal na {loja}!*\n\nSábado e domingo com equipe completa e embrulho rápido 🎀\n\nPrefere não enfrentar fila? Reserva pelo WhatsApp que a gente separa pra você.'],
+  d21:['IMG','🎄 *Semana do Natal!*\n\nAinda dá tempo de garantir o presente perfeito na {loja}.\n\nResponde aqui que eu te ajudo a escolher 🎁'],
+  d22:['⏰ *Faltam 3 dias pro Natal!*\n\nOs presentes mais procurados da {loja} estão acabando.\n\nQuer que eu separe o seu? É só responder 🎁'],
+  d23:['IMG','🚨 *Última chamada de Natal!*\n\nAmanhã já é véspera. Reserva hoje pelo WhatsApp e só passa pra retirar 🎀\n\nTe esperamos na {loja}!'],
+  d24:['🎄 *Hoje é véspera de Natal!*\n\nA {loja} funciona até [HORÁRIO]. Ainda dá tempo do seu presente 🎁\n\nDesejamos um Feliz Natal pra você e sua família 💜'],
+  d27:['💜 Obrigada por escolher a {loja} neste Natal!\n\nSe precisar trocar algum presente, é só vir com a etiqueta. A gente te ajuda a achar o número ou o modelo certo 😊'],
+  d28:['IMG','✨ *Já escolheu o look da virada?*\n\nChegaram as peças de Réveillon na {loja}: branco, dourado e sandálias pra começar 2027 com o pé direito 🥂\n\nQuer ver as fotos?'],
+  d29:['IMG','🤍 *Branco pra virada!*\n\nSeparamos sandálias e peças claras que combinam com o Réveillon.\n\nMe fala seu número que eu te mostro o que tem 😊'],
+  d30:['🥂 *Última chamada pro Réveillon!*\n\nAmanhã a {loja} funciona em horário reduzido. Garante seu look hoje ✨'],
+  d31:['🎆 *Feliz Ano Novo!*\n\nHoje a {loja} funciona até [HORÁRIO].\n\nObrigada por estar com a gente em 2026. Que 2027 venha cheio de conquistas 💜'],
+  vip14:['👑 *Grupo VIP liberado!*\n\nA partir de hoje vocês veem as ofertas de Natal da {loja} antes de todo mundo.\n\nPrimeira novidade às 10h 👀'],
+  vip15:['IMG','👑 *Oferta exclusiva do VIP*\n\n[PRODUTO] por [PREÇO] só pra quem está aqui, até amanhã.\n\nPra reservar, responde com o número da foto 💜'],
+  vip16:['IMG','✨ *Novidade fresquinha no VIP!*\n\nChegou hoje na {loja} e vocês são as primeiras a ver.\n\nQuer que eu separe? Responde aqui 👑'],
+  vip17:['⏳ *Último dia da antecipação VIP!*\n\nAmanhã as ofertas vão pra todo mundo. Quem quiser garantir com a condição do grupo, é hoje 💜'],
+  vip18:['💜 Obrigada por fazer parte do VIP da {loja}!\n\nHoje encerram as condições exclusivas. Fiquem no grupo: no Réveillon tem mais novidade 🥂']
+};
+
+const STORY = {
+  7:{bg:['#7C3AED','#4C1D95'],l:['PRESENTES','ATÉ R$ 150'],st:['Qual você daria?','Responde aqui']},
+  8:{bg:['#BE185D','#701A3F'],l:['PRA MÃE','E PRA AVÓ'],st:['Ela merece o quê?','Enquete: conforto ou estilo']},
+  9:{bg:['#1E3A8A','#0F1E4A'],l:['PRESENTE','PRA ELE'],st:['Pai, namorado ou irmão?','Responde aqui']},
+  10:{bg:['#047857','#06322B'],l:['AMIGO','SECRETO'],st:['Qual o valor do seu?','Até R$ 50 · R$ 100 · R$ 150']},
+  11:{bg:['#C2410C','#5A1E06'],l:['PRESENTE','PRAS CRIANÇAS'],st:['Qual a numeração?','Responde aqui']},
+  12:{bg:['#A3162B','#3B0A12'],l:['KITS','PRONTOS'],st:['Quer o seu embrulhado?','Sim · Quero ver mais']},
+  13:{bg:['#5B21B6','#140C2A'],l:['OS MAIS','VENDIDOS'],st:['Qual é o seu favorito?','Enquete: 1 · 2 · 3']}
+};
+
+const RANGES = {
+  pNatal:{t:'Produção e envio dos criativos de Natal',when:'Terça 01 a sexta 04/12',prazo:'Sexta 04/12',video:'natal',
+    loja:['Montar de 3 a 5 kits de presente','Gravar os vídeos seguindo os roteiros','Tirar fotos dos kits e dos produtos de destaque','Enviar tudo no grupo da Aure com preço e condição até sexta 04/12']},
+  pRev:{t:'Produção e envio dos criativos de Réveillon',when:'Segunda 07 a sexta 11/12',prazo:'Sexta 11/12',video:'rev',
+    loja:['Separar peças brancas, douradas e sandálias','Gravar os vídeos seguindo os roteiros','Tirar fotos das peças de Réveillon','Enviar tudo no grupo da Aure com preço e condição até sexta 11/12']},
+  vip:{t:'Antecipação no Grupo VIP',when:'Segunda 14 a sexta 18/12',video:'vip'}
+};
+const D = {
+  1:{t:'Produção de Natal',tg:['prazo'],range:'pNatal',loja:['Balanço do estoque que sobrou da Black']},
+  2:{t:'Produção de Natal',tg:['prazo'],range:'pNatal'},
+  3:{t:'Produção de Natal',tg:['prazo'],range:'pNatal'},
+  4:{t:'Prazo: criativos de Natal',tg:['prazo'],range:'pNatal',dead:true},
+  5:{t:'',tg:[],we:true},
+  6:{t:'',tg:[],we:true},
+  7:{t:'Anúncios de Natal no ar · Dica: até R$ 150',tg:['data','dica','prazo'],range:'pRev',story:7,loja:['Conferir com a Aure se os anúncios de Natal estão rodando','Postar os stories da dica do dia']},
+  8:{t:'Disparo: antecipe o seu presente · Dica: pra mãe e avó',tg:['natal','dica','prazo'],range:'pRev',story:8,msg:'ant1',kind:'natal',tema:'Antecipe o seu presente'},
+  9:{t:'Dica: pra ele · Abrir Grupo VIP',tg:['dica','vip','prazo'],range:'pRev',story:9,msg:'convite1',kind:'vip',loja:['Criar o Grupo VIP de Natal no WhatsApp','Mandar o convite pra base']},
+  10:{t:'Dica: amigo secreto · Convite VIP',tg:['dica','vip','prazo'],range:'pRev',story:10,msg:'convite2',kind:'vip',loja:['Reforçar o convite pro VIP','Adicionar quem respondeu SIM']},
+  11:{t:'Disparo: horário do fim de semana · Prazo Réveillon',tg:['natal','dica','prazo'],range:'pRev',story:11,dead:true,msg:'hor1',kind:'natal',tema:'Horário de fim de semana (12 e 13/12)'},
+  12:{t:'Horário especial na loja · Dica: kits prontos',tg:['dica'],we:true,story:12},
+  13:{t:'Horário especial na loja · Dica: mais vendidos',tg:['dica'],we:true,story:13},
+  14:{t:'Disparo: dicas de presente · VIP abre',tg:['natal','vip'],range:'vip',msg:'dic1',vipmsg:'vip14',kind:'natal',tema:'Dicas de presente'},
+  15:{t:'Disparo: dicas de presente · VIP oferta',tg:['natal','vip'],range:'vip',msg:'dic2',vipmsg:'vip15',kind:'natal',tema:'Dicas de presente'},
+  16:{t:'Disparo: antecipe o seu presente · VIP lançamentos',tg:['natal','vip'],range:'vip',msg:'ant2',vipmsg:'vip16',kind:'natal',tema:'Antecipe o seu presente'},
+  17:{t:'VIP: último dia da antecipação',tg:['vip'],range:'vip',msg:'vip17',kind:'vip',loja:['Avisar no grupo que é o último dia','Follow-up de quem reservou e não buscou']},
+  18:{t:'Disparo: horário do fim de semana · VIP encerra',tg:['natal','vip'],range:'vip',msg:'hor2',vipmsg:'vip18',kind:'natal',tema:'Horário de fim de semana (19 e 20/12)'},
+  19:{t:'Horário especial na loja',tg:[],we:true},
+  20:{t:'Horário especial na loja',tg:[],we:true},
+  21:{t:'Disparo: dicas de presente · Anúncios de Réveillon no ar',tg:['natal','data'],msg:'dic3',kind:'natal',tema:'Dicas de presente'},
+  22:{t:'Disparo: faltam 3 dias',tg:['natal'],msg:'d22',kind:'natal',loja:['Disparo de urgência','Conferir estoque dos mais vendidos']},
+  23:{t:'Disparo: última chamada',tg:['natal'],msg:'d23',kind:'natal',loja:['Disparo de última chamada','Separar reservas pra retirada amanhã']},
+  24:{t:'Véspera · Anúncios de Natal saem do ar',tg:['natal','data'],msg:'d24',kind:'natal',loja:['Disparo com o horário de hoje','Story com o horário','Anúncios de Natal encerram hoje']},
+  25:{t:'NATAL',tg:['data'],big:'natalDay',loja:['Loja fechada. Bom descanso pra equipe!']},
+  26:{t:'',tg:[],we:true},
+  27:{t:'',tg:[],we:true},
+  28:{t:'Disparo: look de Réveillon',tg:['rev'],msg:'d28',kind:'rev',video:'rev',loja:['Disparo do look da virada','Vitrine de Réveillon montada']},
+  29:{t:'Disparo: sandálias e branco',tg:['rev'],msg:'d29',kind:'rev',loja:['Disparo de sandálias e peças brancas']},
+  30:{t:'Disparo: última chamada',tg:['rev'],msg:'d30',kind:'rev',loja:['Disparo de última chamada','Avisar o horário reduzido de amanhã']},
+  31:{t:'RÉVEILLON',tg:['data','rev'],big:'revDay',msg:'d31',kind:'rev',loja:['Disparo com o horário de hoje','Story de Feliz Ano Novo','Anúncios de Réveillon encerram hoje']},
+  32:{t:'2027',tg:['data'],big:'anoDay',out:true,label:'1',month:'jan',loja:['Feliz Ano Novo!','Na volta, começar o planejamento da liquidação de janeiro com a Aure']}
+};
+/* faixas: [semana (0-4), coluna inicial (1-7), colunas, tipo, texto, range clicável] */
+const BANDS = [
+  [0,2,4,'prazo','Produção dos criativos de Natal · envio até sex 04/12','pNatal'],
+  [1,1,7,'natal','Anúncios de Natal no ar (sobem na segunda 07/12)',null],
+  [1,1,5,'prazo','Produção dos criativos de Réveillon · envio até sex 11/12','pRev'],
+  [2,1,7,'natal','Anúncios de Natal no ar',null],
+  [2,1,5,'vip','Antecipação no Grupo VIP','vip'],
+  [3,1,4,'natal','Anúncios de Natal até 24/12',null],
+  [3,1,7,'rev','Anúncios de Réveillon no ar (sobem na segunda 21/12)',null],
+  [4,1,4,'rev','Anúncios de Réveillon até 31/12',null]
+];
+const WD = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+const order = Object.keys(D).map(Number);
+
+/* ---------- STATE ---------- */
+const S = {store:'', filter:null, day:null, tab:null, timers:[]};
+try{S.store = localStorage.getItem('aure_dez_store')||''}catch(e){}
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fill = s => s.replace(/\{loja\}/g, S.store.trim() || 'sua loja');
+const fmtWA = s => esc(fill(s)).replace(/\*(.+?)\*/g,'<b>$1</b>');
+
+/* ---------- FILTERS ---------- */
+function renderFilters(){
+  const f = $('#filters'); f.innerHTML='';
+  Object.entries(TY).forEach(([k,v])=>{
+    const b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed',S.filter===k);
+    b.innerHTML=`<span class="dot" style="background:${v.c}"></span>${v.n}`;
+    b.onclick=()=>{S.filter=S.filter===k?null:k;renderFilters();applyFilter()};
+    f.appendChild(b);
+  });
+}
+function applyFilter(){
+  document.querySelectorAll('.day[data-d]').forEach(el=>{
+    const d=D[el.dataset.d];el.classList.toggle('dim',!!S.filter && !d.tg.includes(S.filter));
+  });
+}
+
+/* ---------- GRID ---------- */
+function renderGrid(){
+  const g=$('#grid');g.innerHTML='';
+  WD.forEach(w=>{const x=document.createElement('div');x.className='wd';x.textContent=w.toUpperCase();g.appendChild(x)});
+  const cells=[null,...order,null,null];const now=new Date();
+  cells.forEach((n,i)=>{
+    if(n===null){const e=document.createElement('div');e.className='day empty';g.appendChild(e)}
+    else{
+      const d=D[n];const has=tabsFor(Object.assign({loja:[]},cur0(n))).length>0;const b=document.createElement(has?'button':'div');
+      b.className='day'+(d.big?' big '+d.big:'')+(d.dead?' deadline':'')+(d.out?' out':'')+(d.we&&!d.big?' we':'');
+      if(now.getFullYear()===2026&&now.getMonth()===11&&now.getDate()===n)b.classList.add('today');
+      b.dataset.d=n;
+      b.setAttribute('aria-label',`${d.label||n} de ${d.month==='jan'?'janeiro':'dezembro'}: ${d.t}`);
+      const ics=d.tg.map(t=>`<span class="ic" style="background:${TY[t].c}1f;color:${TY[t].c}" title="${TY[t].n}">${I[TY[t].i]}</span>`).join('');
+      b.innerHTML=`<span class="num mont">${d.label||n}</span><span class="wdm">${WD[n%7]}</span><span class="ttl">${esc(d.t)}</span>${d.we&&!d.big?'<span class="wetag">SEM SUBIDA DE ANÚNCIOS</span>':''}<span class="ics">${d.big?'':ics}</span>`;
+      if(has)b.onclick=()=>openDay(n);else b.classList.add('static');g.appendChild(b);
+    }
+    if(i%7===6){
+      const wk=(i-6)/7;const bs=BANDS.filter(x=>x[0]===wk);if(!bs.length)return;
+      const row=document.createElement('div');row.className='bands';
+      bs.forEach(([w,c,s,ty,txt,rg])=>{
+        const el=document.createElement(rg?'button':'div');el.className='band b-'+ty;el.style.gridColumn=`${c} / span ${s}`;
+        el.innerHTML=`${I[TY[ty].i]}<span>${esc(txt)}</span>`;
+        if(rg){el.onclick=()=>openRange(rg);el.setAttribute('aria-label',`Abrir: ${txt}`)}
+        row.appendChild(el);
+      });
+      g.appendChild(row);
+    }
+  });
+  applyFilter();
+}
+function tilt(el){
+  el.addEventListener('pointermove',ev=>{
+    if(ev.pointerType!=='mouse')return;
+    const r=el.getBoundingClientRect();const x=(ev.clientX-r.left)/r.width-.5;const y=(ev.clientY-r.top)/r.height-.5;
+    el.style.transform=`translateZ(30px) rotateX(${-y*16}deg) rotateY(${x*16}deg)`;
+  });
+  el.addEventListener('pointerleave',()=>{el.style.transform=''});
+}
+
+/* ---------- DRAWER ---------- */
+function cur0(n){const d=Object.assign({},D[n]);if(d.range){const r=RANGES[d.range];if(!d.video)d.video=r.video}return d}
+function cur(){
+  if(typeof S.day==='string'){const k=S.day.slice(2);const r=RANGES[k];
+    return {t:r.t,tg:[k==='vip'?'vip':'prazo'],video:r.video,loja:r.loja||['Acompanhar as mensagens do VIP pelos dias de cada uma'],isRange:true,when:r.when,prazo:r.prazo,key:k};}
+  const d=Object.assign({},D[S.day]);
+  if(d.range){const r=RANGES[d.range];d.rg=r;if(!d.video)d.video=r.video;if(r.loja&&d.range!=='vip')d.loja=[...(d.loja||[]),...r.loja];}
+  d.loja=d.loja||[];return d;
+}
+function tabsFor(d){
+  const t=[];
+  if(d.msg)t.push(['wa',d.kind==='vip'?'Mensagem VIP':'Disparo WhatsApp','wa']);
+  if(d.vipmsg)t.push(['vipwa','Mensagem no VIP','crown']);
+  if(d.video)t.push(['video','Roteiros de vídeo','video']);
+  if(d.story)t.push(['story','Roteiro dos stories','story']);
+  return t;
+}
+function openRange(k){S.day='r:'+k;show()}
+function openDay(n){S.day=n;show()}
+function show(){
+  const d=cur();const tabs=tabsFor(d);S.tab=tabs[0][0];S.vid=0;
+  const n=S.day;
+  if(d.isRange){
+    $('#dNum').textContent=d.key==='pNatal'?'01–04':d.key==='pRev'?'07–11':'14–18';$('#dNum').style.fontSize='44px';
+    $('#dWd').textContent=d.when+(d.prazo?` · prazo ${d.prazo}`:'');
+  }else{
+    $('#dNum').textContent=d.label||n;$('#dNum').style.fontSize='';
+    $('#dWd').textContent=`${WD[n%7]} · ${d.label||n} de ${d.month==='jan'?'janeiro de 2027':'dezembro'}`;
+  }
+  $('#dNum').style.color=d.big==='natalDay'?'var(--natal)':d.big==='revDay'?'#D98E04':'var(--tx)';
+  $('#dTitle').textContent=d.t;
+  $('#dTags').innerHTML=d.tg.map(t=>`<span class="tag" style="background:${TY[t].c};color:${TY[t].t}">${TY[t].n}</span>`).join('');
+  $('#dRange').innerHTML=d.rg?`<button class="rangebox" id="goRange">${I.clock}<span>Faz parte de: ${esc(d.rg.t)}${d.rg.prazo?' · prazo '+esc(d.rg.prazo):''}</span></button>`:'';
+  if(d.rg)$('#goRange').onclick=()=>openRange(D[n].range);
+  renderTabs(tabs);renderPane();
+  $('#drawer').classList.add('on');$('#scrim').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
+  setTimeout(()=>$('#closeD').focus(),50);
+}
+function closeDay(){clearTimers();$('#drawer').classList.remove('on');$('#scrim').classList.remove('on');$('#drawer').setAttribute('aria-hidden','true');
+  const el=document.querySelector(`.day[data-d="${S.day}"]`);if(el)el.focus();S.day=null}
+const clickable=()=>order.filter(n=>tabsFor(Object.assign({loja:[]},cur0(n))).length);
+function step(dir){if(typeof S.day==='string'){const f=({pNatal:1,pRev:7,vip:14})[S.day.slice(2)];if(dir>0){clearTimers();openDay(f);return}S.day=f}const ord=clickable();let i=ord.indexOf(S.day);if(i<0)i=ord.findIndex(x=>x>S.day)-(dir>0?1:0);const n=ord[(i+dir+ord.length)%ord.length];clearTimers();openDay(n)}
+function renderTabs(tabs){
+  const w=$('#tabs');w.innerHTML='';
+  tabs.forEach(([k,l,ic])=>{const b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');b.setAttribute('aria-selected',S.tab===k);
+    b.innerHTML=I[ic]+l;b.onclick=()=>{S.tab=k;renderTabs(tabs);renderPane()};w.appendChild(b)});
+}
+function clearTimers(){S.timers.forEach(t=>clearTimeout(t));S.timers=[]}
+function later(fn,ms){S.timers.push(setTimeout(fn,ms))}
+
+function phone(inner){return `<div class="phoneStage"><div class="phone" id="phone"><div class="screen"><div class="notch"></div>${inner}</div></div></div>`}
+function attachPhoneTilt(){
+  const p=$('#phone');if(!p)return;const st=p.parentElement;
+  st.onpointermove=ev=>{if(ev.pointerType!=='mouse')return;const r=st.getBoundingClientRect();const x=(ev.clientX-r.left)/r.width-.5;const y=(ev.clientY-r.top)/r.height-.5;p.style.transform=`rotateY(${x*26}deg) rotateX(${-y*14}deg)`};
+  st.onpointerleave=()=>{p.style.transform=''};
+}
+
+function renderPane(){
+  clearTimers();const d=cur();const body=$('#dBody');let h='';
+  if(S.tab==='wa'||S.tab==='vipwa'){
+    const key=S.tab==='wa'?d.msg:d.vipmsg;const msgs=MSG[key];
+    const isVip=S.tab==='vipwa'||d.kind==='vip';
+    const kind=isVip?'vip':d.kind;
+    const color={natal:'#F0545A',rev:'#F5B83D',vip:'#2EC4A6',loja:'#8B5CF6'}[kind]||'#8B5CF6';
+    const name=S.store.trim()||'Sua loja';
+    const head=isVip?`<div class="avatar" style="background:linear-gradient(135deg,#2EC4A6,#0B5E55)">${I.crown.replace('currentColor','#fff')}</div><div><div class="wname">VIP ${esc(name)}</div><div class="wsub">grupo · 128 participantes</div></div>`
+      :`<div class="avatar">${esc(name.slice(0,1).toUpperCase())}</div><div><div class="wname">${esc(name)}</div><div class="wsub">conta comercial</div></div>`;
+    h=`<div class="pane"><div>${phone(`<div class="wahead">${head}</div><div class="chat" id="chat"><div class="daychip">${d.label||S.day} de dezembro</div></div><div class="wafoot"><div>Mensagem</div><span>${I.mic}</span></div>`)}</div>
+      <div>${!isVip&&d.tema?`<div class="tema">TEMA · ${esc(d.tema.toUpperCase())}</div>`:''}<h3>${isVip?'Como a mensagem chega no Grupo VIP':'Como o cliente recebe o disparo'}</h3>
+      <p class="lead">Simulação do WhatsApp do cliente. ${msgs.includes('IMG')?'A mensagem vai com a foto que a loja enviou pra Aure, seguida do texto.':'Mensagem só de texto, curta e direta.'} Troque os campos entre colchetes antes de enviar.</p>
+      <div class="msgbox" id="msgTxt">${fmtWA(msgs.filter(m=>m!=='IMG').join('\n\n'))}</div>
+      <div class="row"><button class="btn" id="cpy">${I.copy}Copiar mensagem</button><button class="btn ghost" id="rpl">${I.replay}Ver de novo</button></div>
+      <div class="tips">
+        <div class="tip"><span class="k n">1</span><span><b>Horário:</b> dispare entre 10h e 12h ou entre 18h e 20h, quando o cliente está com o celular na mão.</span></div>
+        <div class="tip"><span class="k n">2</span><span><b>Sem resposta?</b> O bot move o lead pra RECEBEU DISPARO depois de 6 horas.</span></div>
+      </div></div></div>`;
+    body.innerHTML=h;attachPhoneTilt();
+    $('#cpy').onclick=()=>copy(msgs.filter(m=>m!=='IMG').map(fill).join('\n\n'));
+    $('#rpl').onclick=()=>playChat(msgs,color);
+    playChat(msgs,color);
+  }
+  else if(S.tab==='story'){
+    const s=STORY[d.story];
+    const sc=[
+      {n:'Gancho',s:'Story 1',cena:'Foto do produto mais bonito da seleção, ocupando a tela inteira.',fala:'(sem fala)',tela:`DICA DE PRESENTE: ${s.l[0]} ${s.l[1]}`},
+      {n:'Os produtos',s:'Stories 2 a 4',cena:'Uma foto por story, cada uma com o preço escrito. Pode ser vídeo curto girando o produto na mão.',fala:'Se for vídeo: "Esse aqui é [PRODUTO], sai por [PREÇO]."',tela:'Nome do produto + [PREÇO]'},
+      {n:'Interação',s:'Story 5',cena:`Fundo liso com a figurinha de ${/enquete/i.test(s.st[1])?'enquete':'caixa de perguntas'}.`,fala:'(sem fala)',tela:`${s.st[0]} · ${s.st[1]}`},
+      {n:'Chamada',s:'Story 6',cena:'Vendedora segurando um dos produtos, ou foto da fachada.',fala:'"Responde aqui ou chama no WhatsApp que eu separo pra você."',tela:'Figurinha de link pro WhatsApp'}
+    ];
+    body.innerHTML=scriptView({t:`Sequência de stories: ${s.l[0].toLowerCase()} ${s.l[1].toLowerCase()}`,meta:[['Quantidade','6 stories'],['Quando postar','Até 11h e repetir à tarde'],['Material','Fotos que a loja já tirou'],['Objetivo','Puxar conversa no direct']]},sc,
+      ['Texto grande e no topo: ninguém lê letra pequena no story.','Responda todo mundo que interagir, com foto e preço.','Salve os melhores nos Destaques "Natal".']);
+    bindScript(sc,`Stories · ${s.l.join(' ')}`);
+  }
+  else if(S.tab==='video'){
+    const v=VSETS[d.video];
+    const txt=(r,i)=>`ROTEIRO ${i+1} · ${r.n} (${r.dur})\n\nGANCHO\n${fill(r.g)}\n\nDESENVOLVIMENTO\n${fill(r.d)}\n\nCTA\n${fill(r.c)}`;
+    body.innerHTML=`<div class="script"><div class="shead"><div><div class="eyebrow">ROTEIROS</div><h3>${esc(v.t)}</h3></div><button class="btn" id="cpyAll">${I.copy}Copiar os 3 roteiros</button></div>
+      <p class="lead">${esc(v.sub)}</p>
+      <div class="rots">${v.r.map((r,i)=>`<article class="rot" style="animation-delay:${i*.1}s">
+        <div class="rhead"><div class="rnum">${i+1}</div><div class="rtit"><small>ROTEIRO ${i+1}</small><b>${esc(r.n)}</b></div><span class="rdur">${esc(r.dur)}</span><button class="btn ghost rcp" data-i="${i}" aria-label="Copiar roteiro ${i+1}">${I.copy}Copiar</button></div>
+        <div class="rpart g"><small>GANCHO</small><p>${esc(fill(r.g))}</p></div>
+        <div class="rpart d"><small>DESENVOLVIMENTO</small><p>${esc(fill(r.d))}</p></div>
+        <div class="rpart c"><small>CTA</small><p>${esc(fill(r.c))}</p></div>
+      </article>`).join('')}</div>
+      <div class="before"><small>ANTES DE GRAVAR</small><ul><li>Celular em pé, lente limpa e luz vindo de frente.</li><li>Troque tudo o que está entre colchetes pelo produto e preço reais.</li><li>Fale com calma: pode gravar o gancho, o desenvolvimento e o CTA separados e juntar depois.</li><li>Mande os vídeos no grupo da Aure, que a gente coloca nos anúncios.</li></ul></div></div>`;
+    $('#cpyAll').onclick=()=>copy(v.r.map(txt).join('\n\n———\n\n'));
+    document.querySelectorAll('.rcp').forEach(b=>b.onclick=()=>copy(txt(v.r[+b.dataset.i],+b.dataset.i)));
+  }
+  else{
+    let done={};try{done=JSON.parse(localStorage.getItem('aure_dez_ck')||'{}')}catch(e){}
+    h=`<div style="max-width:640px;animation:paneIn .5s"><h3 style="margin:0 0 6px;font-size:20px">${d.isRange?'O que a loja faz nesse período':'O que a loja faz neste dia'}</h3><p class="lead">Marque conforme for fazendo. Fica salvo neste aparelho.</p><div class="check">${d.loja.map((x,i)=>{const id=S.day+'_'+i;return `<button class="ck" data-id="${id}" aria-pressed="${!!done[id]}"><span class="box">${I.check}</span><span>${esc(x)}</span></button>`}).join('')}</div></div>`;
+    body.innerHTML=h;
+    document.querySelectorAll('.ck').forEach(b=>b.onclick=()=>{const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);done[b.dataset.id]=v;try{localStorage.setItem('aure_dez_ck',JSON.stringify(done))}catch(e){}});
+  }
+}
+
+function playChat(msgs,color){
+  clearTimers();const c=$('#chat');if(!c)return;
+  c.querySelectorAll('.bub,.typing').forEach(x=>x.remove());
+  let t=300;const tm=['10:02','10:02','10:03'];
+  msgs.forEach((m,i)=>{
+    later(()=>{const ty=document.createElement('div');ty.className='typing';ty.innerHTML='<i></i><i></i><i></i>';c.appendChild(ty)},t);
+    t+=m==='IMG'?700:1100;
+    later(()=>{c.querySelector('.typing')?.remove();const b=document.createElement('div');
+      if(m==='IMG'){b.className='bub img';b.innerHTML=`<div class="ph" style="background:linear-gradient(145deg,${color},#140C2A)">FOTO QUE A LOJA<br>ENVIOU PRA AURE</div><span class="tm">${tm[i]}</span>`}
+      else{b.className='bub';b.innerHTML=fmtWA(m)+`<span class="tm">${tm[i]||'10:03'}</span>`}
+      c.appendChild(b);},t);
+    t+=250;
+  });
+}
+function scriptView(h,sc,tips,isPhoto){
+  const meta=h.meta.map(m=>`<div class="mt"><small>${esc(m[0])}</small><b>${esc(fill(m[1]))}</b></div>`).join('');
+  const rows=sc.map((x,i)=>`<article class="scn" style="animation-delay:${i*.08}s">
+      <div class="scnum"><b>${i+1}</b><small>${esc(x.s)}</small></div>
+      <div class="scbody">
+        <div class="scttl">${esc(x.n)}${x.sh?`<span>${esc(x.sh)}</span>`:''}</div>
+        <div class="cols">
+          <div><small>${isPhoto?'Como fazer':'O que aparece'}</small><p>${esc(fill(x.cena))}</p></div>
+          ${x.fala!==undefined?`<div class="fala"><small>Fala</small><p>${esc(fill(x.fala))}</p></div>`:''}
+          ${x.tela!==undefined?`<div class="tela"><small>${isPhoto?'Dica':'Texto na tela'}</small><p>${esc(fill(x.tela))}</p></div>`:''}
+        </div>
+      </div></article>`).join('');
+  return `<div class="script"><div class="shead"><div><div class="eyebrow">ROTEIRO</div><h3>${esc(h.t)}</h3></div><button class="btn" id="cpyS">${I.copy}Copiar roteiro</button></div>
+    <div class="meta">${meta}</div><div class="scns">${rows}</div>
+    <div class="before"><small>ANTES DE COMEÇAR</small><ul>${tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div>`;
+}
+function bindScript(sc,title){
+  $('#cpyS').onclick=()=>copy(title+'\n\n'+sc.map((x,i)=>`CENA ${i+1} · ${x.n} (${x.s})${x.sh?'\nEnquadramento: '+x.sh:''}\n${fill(x.cena)}${x.fala!==undefined?'\nFala: '+fill(x.fala):''}${x.tela!==undefined?'\nTexto: '+fill(x.tela):''}`).join('\n\n'));
+}
+function copy(txt){
+  const ok=()=>toast('Mensagem copiada');
+  try{navigator.clipboard.writeText(txt).then(ok,()=>fallback())}catch(e){fallback()}
+  function fallback(){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Selecione o texto e copie')}ta.remove()}
+}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+
+/* ---------- COUNTDOWN ---------- */
+function countdown(){
+  const now=new Date();const day=86400000;
+  const to=(m,d)=>Math.max(0,Math.ceil((new Date(2026,m,d)-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/day));
+  $('#cNatal').textContent=to(11,25);$('#cRev').textContent=to(11,31);
+}
+
+
+/* ---------- INIT ---------- */
+const inp=$('#storeName');inp.value=S.store;
+inp.addEventListener('input',()=>{S.store=inp.value;try{localStorage.setItem('aure_dez_store',S.store)}catch(e){};if(S.day&&(S.tab==='wa'||S.tab==='vipwa'))renderPane()});
+$('#closeD').onclick=closeDay;$('#scrim').onclick=closeDay;$('#prevD').onclick=()=>step(-1);$('#nextD').onclick=()=>step(1);
+addEventListener('keydown',e=>{if(!S.day)return;if(e.key==='Escape')closeDay();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
+renderFilters();renderGrid();countdown();
+</script>
+</body>
+</html>
