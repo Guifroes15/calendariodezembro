@@ -270,6 +270,17 @@ button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(3
 .lbxhead{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.lbxhead b{flex:1;font-size:15px}
 .lbxbody{background:#0E0820;display:grid;place-items:center;min-height:200px}
 .lbxbody img,.lbxbody video{max-width:100%;max-height:78vh;display:block}
+.lbxbody .txtv{background:#fff;color:var(--tx);white-space:pre-wrap;padding:20px 22px;max-height:72vh;overflow:auto;width:min(720px,92vw);font-size:15px;line-height:1.6;place-self:stretch}
+.lbxbody form{background:#fff;padding:18px 20px;width:min(720px,92vw);display:grid;gap:10px;place-self:stretch}
+.lbxbody form label{font-size:13px;font-weight:700;color:var(--tx2)}
+.fld{font:inherit;font-size:16px;width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;color:var(--tx);outline:none}
+.fld:focus{border-color:var(--roxo);box-shadow:0 0 0 4px rgba(139,92,246,.25)}
+textarea.fld{min-height:240px;resize:vertical;line-height:1.55}
+.rtxt{padding:14px;font-size:12.5px;line-height:1.45;color:var(--tx2);text-align:left;white-space:pre-line;overflow:hidden;place-self:stretch;mask-image:linear-gradient(#000 70%,transparent)}
+.mine{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#6D28D9;background:#F1ECFA;border-radius:6px;padding:1px 6px}
+.msrc{font-size:12.5px;color:var(--tx3);margin:8px 0 0}
+.medit textarea{min-height:260px}
+.medit .hint{font-size:12.5px;color:var(--tx3);margin:6px 0 0}
 .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:#1E1535;color:#fff;font-weight:700;border-radius:12px;padding:12px 18px;z-index:40;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
 .toast.on{transform:translate(-50%,0)}
 .foot{margin-top:40px;color:var(--tx3);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -836,9 +847,11 @@ function attachPhoneTilt(){
 }
 
 function renderPane(){
-  clearTimers();const d=cur();const body=$('#dBody');let h='';
+  clearTimers();S.editing=false;const d=cur();const body=$('#dBody');let h='';
   if(S.tab==='wa'||S.tab==='vipwa'){
-    const key=S.tab==='wa'?d.msg:d.vipmsg;const hasV=S.tab==='wa'&&!!SHORT[key];const msgs=(hasV&&S.ver==='curta')?SHORT[key]:MSG[key];
+    const key=S.tab==='wa'?d.msg:d.vipmsg;const hasV=S.tab==='wa'&&!!SHORT[key];const isShort=hasV&&S.ver==='curta';
+    const ek=isShort?key+'_curta':key;const base=isShort?SHORT[key]:MSG[key];const src=msgSource(ek);
+    const msgs=src?(base.includes('IMG')?['IMG']:[]).concat([src.text]):base;S.ek=ek;S.msgSig=src?src.who+src.text:'';
     const isVip=S.tab==='vipwa'||d.kind==='vip';
     const kind=isVip?'vip':d.kind;
     const color={natal:'#F0545A',rev:'#F5B83D',vip:'#2EC4A6',loja:'#8B5CF6'}[kind]||'#8B5CF6';
@@ -848,8 +861,14 @@ function renderPane(){
     h=`<div class="pane"><div>${phone(`<div class="wahead">${head}</div><div class="chat" id="chat"><div class="daychip">${d.label||S.day} de dezembro</div></div><div class="wafoot"><div>Mensagem</div><span>${I.mic}</span></div>`)}</div>
       <div>${!isVip&&d.tema?`<div class="tema">TEMA · ${esc(d.tema.toUpperCase())}</div>`:''}<h3>${isVip?'Como a mensagem chega no Grupo VIP':'Como o cliente recebe o disparo'}</h3>${hasV?`<div class="vers"><button data-v="completa" class="${S.ver!=='curta'?'on':''}">Versão completa</button><button data-v="curta" class="${S.ver==='curta'?'on':''}">Versão curta</button></div><p class="vnote">Alterne entre as duas pra que nem todas as lojas mandem o mesmo texto. A curta funciona melhor pra quem já é cliente; a completa, pra base fria.</p>`:''}
       <p class="lead">Simulação do WhatsApp do cliente. ${msgs.includes('IMG')?'A mensagem vai com a foto que a loja enviou pra Aure, seguida do texto.':'Mensagem só de texto, curta e direta.'} Troque os campos entre colchetes antes de enviar.</p>
-      <div class="msgbox" id="msgTxt">${fmtWA(msgs.filter(m=>m!=='IMG').join('\n\n'))}</div>
-      <div class="row"><button class="btn" id="cpy">${I.copy}Copiar mensagem</button><button class="btn ghost" id="rpl">${I.replay}Ver de novo</button></div>
+      <div id="mview"><div class="msgbox" id="msgTxt">${fmtWA(msgs.filter(m=>m!=='IMG').join('\n\n'))}</div>
+      ${src?`<p class="msrc">${src.who==='me'?'Texto editado por você. Só você vê esta versão.':'Texto atualizado pela Aure.'}</p>`:''}
+      <div class="row"><button class="btn" id="cpy">${I.copy}Copiar mensagem</button><button class="btn ghost" id="edt">Editar mensagem</button><button class="btn ghost" id="rpl">${I.replay}Ver de novo</button></div></div>
+      <div class="medit" id="medit" hidden><label for="mta" class="msrc" style="display:block;font-weight:700;color:var(--tx2)">Editar ${isShort?'versão curta':'mensagem'}</label>
+        <textarea class="fld" id="mta"></textarea>
+        <p class="hint">Escreva {loja} onde quiser o nome da loja e use *asteriscos* para negrito.</p>
+        <div class="row">${R.canEdit?`<button class="btn" id="svAll">Salvar para todas as lojas</button><button class="btn ghost" id="svMe">Salvar só pra mim</button>`:`<button class="btn" id="svMe">Salvar</button>`}
+        <button class="btn ghost" id="cnl">Cancelar</button>${src&&(src.who==='me'||R.canEdit)?`<button class="btn ghost" id="rst">${src.who==='me'?'Voltar ao texto padrão':'Voltar ao texto original'}</button>`:''}</div></div>
       <div class="tips">
         <div class="tip"><span class="k n">1</span><span><b>Horário:</b> dispare entre 10h e 12h ou entre 18h e 20h, quando o cliente está com o celular na mão.</span></div>
         <div class="tip"><span class="k n">2</span><span><b>Sem resposta?</b> O bot move o lead pra RECEBEU DISPARO depois de 6 horas.</span></div>
@@ -857,6 +876,13 @@ function renderPane(){
     body.innerHTML=h;attachPhoneTilt();
     $('#cpy').onclick=()=>copy(msgs.filter(m=>m!=='IMG').map(fill).join('\n\n'));
     $('#rpl').onclick=()=>playChat(msgs,color);
+    const curTxt=msgs.filter(m=>m!=='IMG').join('\n\n');
+    $('#edt').onclick=()=>{S.editing=true;$('#mview').hidden=true;$('#medit').hidden=false;const t=$('#mta');t.value=curTxt;t.focus()};
+    $('#cnl').onclick=()=>{S.editing=false;$('#medit').hidden=true;$('#mview').hidden=false};
+    const val=()=>{const v=$('#mta').value.trim();if(!v)toast('A mensagem está vazia');return v};
+    $('#svMe').onclick=()=>{const v=val();if(v)saveMsg(ek,v,false)};
+    if($('#svAll'))$('#svAll').onclick=()=>{const v=val();if(v)saveMsg(ek,v,true)};
+    if($('#rst'))$('#rst').onclick=()=>resetMsg(ek,src.who);
     body.querySelectorAll('.vers button').forEach(b=>b.onclick=()=>{S.ver=b.dataset.v;renderPane();});
     playChat(msgs,color);
   }
@@ -939,66 +965,129 @@ function countdown(){
 
 
 /* ---------- REFERÊNCIAS (arquivos) ---------- */
-const R = {db:null, assets:null, canEdit:false, list:[], ready:false, failed:false, filter:'all', uploading:0};
+/* Aure (quem edita o calendário) grava em 'refs' e 'msgs': todas as lojas veem.
+   Cada loja grava em data/users/<id>/...: área privada, ninguém mais lê. */
+const R = {db:null, assets:null, uid:null, canEdit:false, shared:[], my:[], list:[], ready:false, failed:false, filter:'all', uploading:0, msgAll:{}, msgMe:{}};
 const SCOPES = {geral:'Geral (todas as datas)',pNatal:'Produção de Natal',pRev:'Produção de Réveillon',vip:'Grupo VIP'};
 const scopeName = s => SCOPES[s] || (s && s[0]==='d' ? `Dia ${s.slice(1)}/12` : 'Geral');
-const kindOf = t => /^video\//.test(t)?'video':/^image\//.test(t)?'foto':/pdf/.test(t)?'pdf':'outro';
-const KIND = {video:{n:'Vídeo',i:'video'},foto:{n:'Foto',i:'camera'},pdf:{n:'PDF',i:'list'},outro:{n:'Arquivo',i:'list'}};
+const kindOf = t => /^video\//.test(t)?'video':/^image\//.test(t)?'foto':/pdf/.test(t)?'pdf':/^text\/|markdown/.test(t)?'doc':'outro';
+const kindR = r => r.kind==='texto'?'texto':kindOf(r.type||'');
+const KIND = {video:{n:'Vídeo',i:'video'},foto:{n:'Foto',i:'camera'},pdf:{n:'PDF',i:'list'},doc:{n:'Texto',i:'list'},texto:{n:'Roteiro',i:'list'},outro:{n:'Arquivo',i:'list'}};
+const FIL = {all:()=>true,video:k=>k==='video',foto:k=>k==='foto',rot:k=>k==='pdf'||k==='doc'||k==='texto'};
 const safeUrl = u => (typeof u==='string' && (u.startsWith('/_blob/')||u.startsWith('https://'))) ? u : '';
+const myPath = c => `data/users/${R.uid}/${c}`;
+const refsDest = () => R.canEdit ? 'refs' : myPath('refs');
 
+/* ---- mensagens editadas ---- */
+const LS_MSG = 'aure_dez_msgs';
+function lsMsgs(){try{const m=JSON.parse(localStorage.getItem(LS_MSG)||'{}');return m&&typeof m==='object'?m:{}}catch(e){return {}}}
+function lsSet(m){try{localStorage.setItem(LS_MSG,JSON.stringify(m))}catch(e){}}
+R.msgMe = lsMsgs();
+const onlineMe = () => !!(R.db && R.uid);
+function msgSource(k){
+  const me=R.msgMe[k];if(me&&typeof me.text==='string'&&me.text)return {text:me.text,who:'me'};
+  const all=R.msgAll[k];if(all&&typeof all.text==='string'&&all.text)return {text:all.text,who:'aure'};
+  return null;
+}
+function toMap(snap){const m={};snap.docs.forEach(d=>{const x=d.data();if(x&&typeof x.text==='string')m[d.id]={text:x.text}});return m}
+function msgChanged(){
+  if(!S.day||S.editing||(S.tab!=='wa'&&S.tab!=='vipwa'))return;
+  const s=msgSource(S.ek);if((s?s.who+s.text:'')!==S.msgSig)renderPane();
+}
+async function saveMsg(k,text,all){
+  const row={text:text.slice(0,4000),updatedAt:Date.now()};
+  try{
+    if(all){
+      await R.db.collection('msgs').doc(k).set(row);R.msgAll[k]=row;
+      if(R.msgMe[k])await dropMine(k);
+    }else if(onlineMe()){await R.db.collection(myPath('msgs')).doc(k).set(row);R.msgMe[k]=row}
+    else{R.msgMe[k]=row;const m=lsMsgs();m[k]=row;lsSet(m)}
+    toast(all?'Salvo para todas as lojas':'Mensagem salva');renderPane();
+  }catch(e){toast('Não deu pra salvar. Tente de novo.')}
+}
+async function dropMine(k){
+  delete R.msgMe[k];
+  if(onlineMe())await R.db.collection(myPath('msgs')).doc(k).delete();
+  else{const m=lsMsgs();delete m[k];lsSet(m)}
+}
+async function resetMsg(k,who){
+  try{
+    if(who==='me')await dropMine(k);
+    else{await R.db.collection('msgs').doc(k).delete();delete R.msgAll[k]}
+    toast('Texto restaurado');renderPane();
+  }catch(e){toast('Não deu pra restaurar. Tente de novo.')}
+}
+
+/* ---- conexão ---- */
 async function initRefs(){
   try{
     const [db,assets,user]=await Promise.all([claude.use('db'),claude.use('assets'),claude.use('user')]);
-    R.db=db;R.assets=assets;R.canEdit=!!(assets && user && await user.canEdit());
+    R.db=db;R.assets=assets;
+    if(user){R.canEdit=!!(await user.canEdit());R.uid=(await user.id())||null}
   }catch(e){}
   if(!R.db){R.failed=true;refreshRefs();return}
+  if(R.uid){R.msgMe={}}
   const timer=setTimeout(()=>{if(!R.ready){R.failed=true;refreshRefs()}},10000);
-  R.db.collection('refs').orderBy('createdAt','desc').onSnapshot(snap=>{
-    R.list=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
-    if(!snap.metadata.fromCache){R.ready=true;R.failed=false;clearTimeout(timer)}else if(!R.ready)R.ready=true;
-    refreshRefs();
-  },()=>{clearTimeout(timer);R.failed=true;refreshRefs()});
+  const ok=()=>{if(!R.ready){R.ready=true;R.failed=false;clearTimeout(timer)}};
+  const fail=()=>{clearTimeout(timer);if(!R.ready){R.failed=true;refreshRefs()}};
+  const rows=(snap,mine)=>snap.docs.map(d=>Object.assign({},d.data(),{id:d.id,mine}));
+  R.db.collection('refs').orderBy('createdAt','desc').onSnapshot(snap=>{R.shared=rows(snap,false);ok();mergeRefs()},fail);
+  R.db.collection('msgs').onSnapshot(snap=>{R.msgAll=toMap(snap);msgChanged()},()=>{});
+  if(R.uid){
+    R.db.collection(myPath('refs')).orderBy('createdAt','desc').onSnapshot(snap=>{R.my=rows(snap,true);mergeRefs()},()=>{});
+    R.db.collection(myPath('msgs')).onSnapshot(snap=>{R.msgMe=toMap(snap);msgChanged()},()=>{});
+  }
+  if(S.day&&!S.editing)renderPane();
 }
+function mergeRefs(){R.list=R.shared.concat(R.my).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));refreshRefs()}
 function refsFor(scopes){return R.list.filter(r=>scopes.includes(r.scope))}
 function scopesOfCurrent(){
   if(typeof S.day==='string')return [S.day.slice(2)];
   const d=D[S.day];return ['d'+S.day].concat(d&&d.range?[d.range]:[]);
 }
 function uploadScopeOfCurrent(){return typeof S.day==='string'?S.day.slice(2):'d'+S.day}
+const refKey = r => (r.mine?'m:':'s:')+r.id;
+const findRef = key => R.list.find(r=>refKey(r)===key);
 
 function refCard(r){
-  const k=kindOf(r.type||'');const url=safeUrl(r.url);
-  const thumb=k==='foto'&&url?`<img src="${esc(url)}" alt="" loading="lazy">`:k==='video'&&url?`<video src="${esc(url)}#t=0.5" muted preload="metadata"></video><span class="play">${I.video}</span>`:`<span class="pdfic">${I[KIND[k].i]}<b>${KIND[k].n}</b></span>`;
-  return `<div class="rcard"><button class="rthumb" data-open="${esc(r.id)}" aria-label="Abrir ${esc(r.title||'arquivo')}">${thumb}</button>
-    <div class="rinfo"><b>${esc(r.title||'Sem nome')}</b><small>${KIND[k].n} · ${esc(scopeName(r.scope))}</small></div>
-    ${R.canEdit?`<button class="rdel" data-del="${esc(r.id)}" aria-label="Excluir ${esc(r.title||'arquivo')}">Excluir</button>`:''}</div>`;
+  const k=kindR(r);const url=safeUrl(r.url);
+  const thumb=k==='texto'?`<span class="rtxt">${esc(String(r.text||'').slice(0,280))}</span>`
+    :k==='foto'&&url?`<img src="${esc(url)}" alt="" loading="lazy">`:k==='video'&&url?`<video src="${esc(url)}#t=0.5" muted preload="metadata"></video><span class="play">${I.video}</span>`:`<span class="pdfic">${I[KIND[k].i]}<b>${KIND[k].n}</b></span>`;
+  const key=esc(refKey(r));
+  return `<div class="rcard"><button class="rthumb" data-open="${key}" aria-label="Abrir ${esc(r.title||'arquivo')}">${thumb}</button>
+    <div class="rinfo"><b>${esc(r.title||'Sem nome')}</b><small>${KIND[k].n} · ${esc(scopeName(r.scope))}${r.mine?'<span class="mine">Só você vê</span>':''}</small></div>
+    ${(r.mine||R.canEdit)?`<button class="rdel" data-del="${key}" aria-label="Excluir ${esc(r.title||'arquivo')}">Excluir</button>`:''}</div>`;
 }
 function uploader(scope,withSelect){
-  if(!R.canEdit)return '';
+  const canFile=!!R.assets, canTxt=!!(R.db&&(R.canEdit||R.uid));
+  if(!canFile&&!canTxt)return '';
   const sel=withSelect?`<label class="upsel">Ligar a <select id="upScope">${Object.entries(SCOPES).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('')}</select></label>`:'';
-  return `<div class="upz"><label class="btn"><input type="file" class="upin" data-scope="${esc(scope)}" multiple accept="video/*,image/*,application/pdf" hidden>${I.up}Adicionar vídeo, foto ou PDF</label>${sel}<span class="uphint">Até 20 MB por arquivo${R.uploading?` · enviando ${R.uploading}…`:''}</span></div>`;
+  const who=R.canEdit?'Você administra o calendário: o que enviar aqui aparece para todas as lojas.':'Só você vê o que enviar aqui.';
+  return `<div class="upz">${canFile?`<label class="btn"><input type="file" class="upin" data-scope="${esc(scope)}" multiple accept="video/*,image/*,application/pdf,text/plain,.txt,.md" hidden>${I.up}Enviar foto, vídeo ou PDF</label>`:''}${canTxt?`<button class="btn ghost" data-wr="${esc(scope)}">${I.list}Escrever roteiro</button>`:''}${sel}<span class="uphint">${who}${canFile?' Até 20 MB por arquivo.':''}${R.uploading?` · enviando ${R.uploading}…`:''}</span></div>`;
 }
 function stateNote(){
-  if(R.failed)return `<p class="lead">As referências aparecem na versão online do calendário, com a conta conectada.</p>`;
+  if(R.failed)return `<p class="lead">Para enviar e ver referências, abra o calendário pelo link do Claude com a sua conta conectada.</p>`;
   if(!R.ready)return `<p class="lead">Carregando referências…</p>`;
   return '';
 }
 function libraryHTML(){
-  const items=R.list.filter(r=>R.filter==='all'||kindOf(r.type||'')===R.filter);
-  const fil=[['all','Todos'],['video','Vídeos'],['foto','Fotos'],['pdf','PDFs']].map(([k,n])=>`<button class="vbtn" data-lf="${k}" aria-pressed="${R.filter===k}">${n}</button>`).join('');
-  return `<div class="libhead"><div><div class="eyebrow">BIBLIOTECA</div><h2 class="mont">Referências e roteiros prontos</h2><p class="lead" style="margin:4px 0 0">Vídeos e fotos de referência e PDFs com outras sugestões de roteiro.</p></div></div>
+  const items=R.list.filter(r=>FIL[R.filter](kindR(r)));
+  const fil=[['all','Todos'],['video','Vídeos'],['foto','Fotos'],['rot','Roteiros']].map(([k,n])=>`<button class="vbtn" data-lf="${k}" aria-pressed="${R.filter===k}">${n}</button>`).join('');
+  return `<div class="libhead"><div><div class="eyebrow">BIBLIOTECA</div><h2 class="mont">Referências e roteiros</h2><p class="lead" style="margin:4px 0 0">Fotos, vídeos e roteiros da Aure para todas as lojas, mais o que você guardar aqui. O que cada loja envia fica só com ela.</p></div></div>
     ${uploader('geral',true)}<div class="vids" style="margin-top:14px">${fil}</div>
     ${stateNote()}${R.ready&&!items.length?'<p class="lead">Nenhum arquivo por aqui ainda.</p>':''}
     <div class="rgrid">${items.map(refCard).join('')}</div>`;
 }
 function paneRefsHTML(){
   const items=refsFor(scopesOfCurrent());
-  return `<div class="script"><div class="shead"><div><div class="eyebrow">REFERÊNCIAS</div><h3>Vídeos, fotos e PDFs deste ${typeof S.day==='string'?'período':'dia'}</h3></div></div>
-    ${uploader(uploadScopeOfCurrent(),false)}${stateNote()}${R.ready&&!items.length?'<p class="lead">Nenhuma referência ligada aqui ainda. Os PDFs gerais ficam na página Referências, no menu lateral.</p>':''}
+  return `<div class="script"><div class="shead"><div><div class="eyebrow">REFERÊNCIAS</div><h3>Fotos, vídeos e roteiros deste ${typeof S.day==='string'?'período':'dia'}</h3></div></div>
+    ${uploader(uploadScopeOfCurrent(),false)}${stateNote()}${R.ready&&!items.length?'<p class="lead">Nenhuma referência ligada aqui ainda. As gerais ficam na página Referências, no menu lateral.</p>':''}
     <div class="rgrid">${items.map(refCard).join('')}</div></div>`;
 }
+function pickScope(sc){return sc==='geral'&&$('#upScope')?$('#upScope').value:sc}
 function bindRefs(root){
-  root.querySelectorAll('.upin').forEach(inp=>inp.onchange=()=>{const sc=inp.dataset.scope==='geral'&&$('#upScope')?$('#upScope').value:inp.dataset.scope;doUpload([...inp.files],sc);inp.value=''});
+  root.querySelectorAll('.upin').forEach(inp=>inp.onchange=()=>{doUpload([...inp.files],pickScope(inp.dataset.scope));inp.value=''});
+  root.querySelectorAll('[data-wr]').forEach(b=>b.onclick=()=>openWriter(pickScope(b.dataset.wr)));
   root.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openRef(b.dataset.open));
   root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
     if(b.dataset.armed){delRef(b.dataset.del);return}
@@ -1008,27 +1097,51 @@ function bindRefs(root){
 }
 async function doUpload(files,scope){
   if(!R.assets||!R.db)return;
+  if(!R.canEdit&&!R.uid){toast('Entre na sua conta para enviar arquivos');return}
   for(const f of files){
     if(f.size>20*1024*1024){toast(`${f.name}: maior que 20 MB`);continue}
     R.uploading++;refreshRefs();
     try{
       const a=await R.assets.upload(f);
-      await R.db.collection('refs').add({scope,title:f.name.replace(/\.[^.]+$/,''),assetId:a.id,url:a.url,type:a.contentType||f.type,size:a.sizeBytes||f.size,createdAt:Date.now()});
+      await R.db.collection(refsDest()).add({scope,title:f.name.replace(/\.[^.]+$/,''),assetId:a.id,url:a.url,type:a.contentType||f.type,size:a.sizeBytes||f.size,createdAt:Date.now()});
       toast('Arquivo adicionado');
     }catch(e){toast(e&&e.code==='quota_exceeded'?'Espaço cheio: exclua arquivos antigos':'Não deu pra enviar '+f.name)}
     R.uploading--;refreshRefs();
   }
 }
-async function delRef(id){
-  const r=R.list.find(x=>x.id===id);if(!r)return;
-  try{await R.db.collection('refs').doc(id).delete();if(r.assetId&&R.assets)await R.assets.delete(r.assetId).catch(()=>{});toast('Arquivo excluído')}catch(e){toast('Não deu pra excluir')}
+function openWriter(scope){
+  const body=$('#lbxBody');$('#lbxTitle').textContent='Novo roteiro · '+scopeName(scope);$('#lbxDl').hidden=true;
+  body.innerHTML=`<form id="wrf"><label for="wrT">Título</label><input class="fld" id="wrT" maxlength="120" autocomplete="off">
+    <label for="wrX">Roteiro</label><textarea class="fld" id="wrX" maxlength="20000"></textarea>
+    <div class="row"><button class="btn" type="submit">Salvar roteiro</button><button class="btn ghost" type="button" id="wrC">Cancelar</button></div></form>`;
+  $('#lbx').classList.add('on');$('#wrT').focus();
+  $('#wrC').onclick=closeLbx;
+  $('#wrf').onsubmit=async e=>{
+    e.preventDefault();const t=$('#wrT').value.trim(),x=$('#wrX').value.trim();
+    if(!t||!x){toast('Preencha o título e o roteiro');return}
+    try{await R.db.collection(refsDest()).add({scope,kind:'texto',title:t,text:x,createdAt:Date.now()});closeLbx();toast('Roteiro salvo')}
+    catch(err){toast('Não deu pra salvar o roteiro')}
+  };
 }
-function openRef(id){
-  const r=R.list.find(x=>x.id===id);if(!r)return;const url=safeUrl(r.url);if(!url)return;const k=kindOf(r.type||'');
-  if(k==='pdf'||k==='outro'){window.open(url,'_blank','noopener');return}
-  const box=$('#lbx');const body=$('#lbxBody');body.innerHTML='';
+async function delRef(key){
+  const r=findRef(key);if(!r)return;
+  try{await R.db.collection(r.mine?myPath('refs'):'refs').doc(r.id).delete();if(r.assetId&&R.assets)await R.assets.delete(r.assetId).catch(()=>{});toast('Excluído')}catch(e){toast('Não deu pra excluir')}
+}
+function openRef(key){
+  const r=findRef(key);if(!r)return;const k=kindR(r);const body=$('#lbxBody');
+  if(k==='texto'){
+    $('#lbxTitle').textContent=r.title||'Roteiro';$('#lbxDl').hidden=true;
+    body.innerHTML=`<div class="txtv" id="txV"></div><div style="background:#fff;place-self:stretch;padding:0 22px 18px"><button class="btn" id="txC">${I.copy}Copiar roteiro</button></div>`;
+    $('#txV').textContent=String(r.text||'');$('#txC').onclick=()=>copy(String(r.text||''));
+    $('#lbx').classList.add('on');return;
+  }
+  const url=safeUrl(r.url);if(!url)return;
+  if(k==='pdf'||k==='doc'||k==='outro'){$('#lbxTitle').textContent=r.title||KIND[k].n;$('#lbxDl').hidden=false;$('#lbxDl').href=url;
+    body.innerHTML=`<div class="txtv" style="text-align:center"><p>${KIND[k].n} pronto para abrir.</p><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${I.list}Abrir ${KIND[k].n}</a></div>`;
+    $('#lbx').classList.add('on');return}
+  body.innerHTML='';$('#lbxDl').hidden=false;
   const el=document.createElement(k==='video'?'video':'img');el.src=url;if(k==='video'){el.controls=true;el.autoplay=true;el.playsInline=true}else el.alt=r.title||'';
-  body.appendChild(el);$('#lbxTitle').textContent=r.title||'';$('#lbxDl').href=url;box.classList.add('on');
+  body.appendChild(el);$('#lbxTitle').textContent=r.title||'';$('#lbxDl').href=url;$('#lbx').classList.add('on');
 }
 function closeLbx(){const b=$('#lbx');b.classList.remove('on');$('#lbxBody').innerHTML=''}
 function refreshRefs(){
@@ -1039,7 +1152,7 @@ function refreshRefs(){
 
 /* ---------- INIT ---------- */
 const inp=$('#storeName');inp.value=S.store;
-inp.addEventListener('input',()=>{S.store=inp.value;try{localStorage.setItem('aure_dez_store',S.store)}catch(e){};if(S.day&&(S.tab==='wa'||S.tab==='vipwa'))renderPane();clearTimeout(window._vmT);window._vmT=setTimeout(()=>{const t=document.getElementById('tgrid');if(t&&typeof vmTactics==='function'){t.innerHTML=vmTactics();renderVM()}},250)});
+inp.addEventListener('input',()=>{S.store=inp.value;try{localStorage.setItem('aure_dez_store',S.store)}catch(e){};if(S.day&&(S.tab==='wa'||S.tab==='vipwa')&&!S.editing)renderPane();clearTimeout(window._vmT);window._vmT=setTimeout(()=>{const t=document.getElementById('tgrid');if(t&&typeof vmTactics==='function'){t.innerHTML=vmTactics();renderVM()}},250)});
 $('#closeD').onclick=closeDay;$('#scrim').onclick=closeDay;$('#prevD').onclick=()=>step(-1);$('#nextD').onclick=()=>step(1);
 addEventListener('keydown',e=>{if($('#lbx').classList.contains('on')){if(e.key==='Escape')closeLbx();return}if(!S.day)return;if(e.key==='Escape')closeDay();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
 
