@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F7F4FC; --bg2:#FFFFFF; --card:#FFFFFF; --card2:#FFFFFF; --line:#E6DEF5;
+  --bg:#FFFFFF; --bg2:#FFFFFF; --card:#FFFFFF; --card2:#FFFFFF; --line:#E6DEF5;
   --tx:#1E1535; --tx2:#5B5275; --tx3:#8A80AA;
   --roxo:#8B5CF6; --roxo2:#6D28D9;
   --natal:#F0545A; --rev:#F5B83D; --vip:#2EC4A6; --dica:#C4A5FF; --prazo:#FFFFFF; --loja:#9B93B8;
@@ -246,6 +246,30 @@ button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(3
 .rpart.d{border-color:#8B5CF6}.rpart.d small{color:#6D28D9}
 .rpart.c{border-color:#0F9F87}.rpart.c small{color:#0B7A68}
 .tema{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.5px;color:#A3162B;background:#FDE7E8;border-radius:6px;padding:5px 9px;margin-bottom:10px}
+
+.lib{margin-top:44px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px}
+.libhead h2{margin:6px 0 0;font-size:28px;font-weight:900}
+.upz{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0 4px}
+.upz label.btn{cursor:pointer}
+.upsel{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--tx2)}
+.upsel select{font:inherit;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fff;color:var(--tx)}
+.uphint{font-size:12.5px;color:var(--tx3)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:14px}
+.rcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.rthumb{position:relative;border:none;padding:0;background:#F1ECFA;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden}
+.rthumb img,.rthumb video{width:100%;height:100%;object-fit:cover;display:block}
+.rthumb .play{position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(30,21,53,.75);color:#fff;display:grid;place-items:center}
+.rthumb .play svg{width:20px;height:20px}
+.pdfic{display:flex;flex-direction:column;align-items:center;gap:6px;color:#6D28D9}.pdfic svg{width:34px;height:34px}.pdfic b{font-family:Montserrat;font-size:13px}
+.rinfo{padding:10px 12px 4px}.rinfo b{display:block;font-size:14px;line-height:1.3;word-break:break-word}.rinfo small{font-size:12px;color:var(--tx3)}
+.rdel{margin:6px 12px 12px;align-self:flex-start;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--tx2)}
+.rdel.armed{background:#E0353C;border-color:#E0353C;color:#fff}
+.lbx{position:fixed;inset:0;background:rgba(20,12,42,.8);z-index:50;display:none;place-items:center;padding:24px}
+.lbx.on{display:grid}
+.lbxin{background:#fff;border-radius:18px;max-width:min(980px,100%);max-height:100%;display:flex;flex-direction:column;overflow:hidden}
+.lbxhead{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}.lbxhead b{flex:1;font-size:15px}
+.lbxbody{background:#0E0820;display:grid;place-items:center;min-height:200px}
+.lbxbody img,.lbxbody video{max-width:100%;max-height:78vh;display:block}
 .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:#1E1535;color:#fff;font-weight:700;border-radius:12px;padding:12px 18px;z-index:40;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
 .toast.on{transform:translate(-50%,0)}
 .foot{margin-top:40px;color:var(--tx3);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -269,20 +293,197 @@ button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(3
   .phone{width:270px;height:550px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+.vers{display:inline-flex;gap:4px;background:#F1ECFA;border:1px solid var(--line);border-radius:12px;padding:4px;margin:10px 0 6px}.vers button{padding:8px 14px;border-radius:9px;font-weight:600;font-size:13px;color:var(--tx2);border:0;background:none;cursor:pointer}.vers button.on{background:#fff;color:var(--roxo2);box-shadow:0 1px 3px rgba(60,30,120,.12)}.vnote{font-size:12.5px;color:var(--tx3);margin:0 0 8px}
+
+.vm{margin-top:44px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px}
+.vm h2{margin:6px 0 4px;font-size:28px;font-weight:900}
+.vmcalc{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-top:18px}
+@media(max-width:860px){.vmcalc{grid-template-columns:1fr}}
+.vmin{display:flex;flex-direction:column;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px}
+.vmin h4{margin:0 0 2px;font-size:14px;font-weight:800}
+.vmin label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:600;color:var(--tx2)}
+.vmin input{font:inherit;font-size:15px;font-weight:700;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;outline:none}
+.vmin input:focus{border-color:var(--roxo)}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.kc{border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:#fff}
+.kc small{font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--tx3);text-transform:uppercase}
+.kc b{font-size:26px;font-weight:900;color:var(--tx);letter-spacing:-.5px}
+.kc .sub{font-size:12.5px;color:var(--tx2)}
+.kc input[type=range]{width:100%;accent-color:var(--roxo)}
+.kc .meta{font-size:12.5px;color:var(--tx2);display:flex;justify-content:space-between}
+.kc .gain{font-size:15px;font-weight:800;color:#0F9F87}
+.vmtot{margin-top:12px;background:linear-gradient(135deg,#6D28D9,#8B5CF6);color:#fff;border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.vmtot b{font-size:28px;font-weight:900}
+.vmtot span{font-size:13px;opacity:.9;max-width:460px}
+.vmf{font-size:12px;color:var(--tx3);margin-top:10px}
+.vchips{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+.vchips button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--tx2);border-radius:999px;padding:8px 14px;cursor:pointer}
+.vchips button.on{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.tc{border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;background:#fff}
+.tc .tk{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:1.3px;border-radius:6px;padding:4px 8px;color:#fff}
+.tc h4{margin:0;font-size:17px;font-weight:800;line-height:1.25}
+.tc p{margin:0;font-size:14px;color:var(--tx2);line-height:1.5}
+.tc .how{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--tx2)}
+.tc .how b{color:var(--tx)}
+.tc .fala{border-left:3px solid var(--roxo);padding:4px 0 4px 12px;font-size:14px;font-style:italic;color:var(--tx)}
+.tc .row{margin-top:auto}
+.tc .btn.ghost{color:var(--roxo2);background:#fff;border:1px solid var(--line);padding:9px 13px;font-size:13px}
+.tc .done{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer}
+.tc .done input{accent-color:#0F9F87;width:17px;height:17px}
+.tc.ok{border-color:#0F9F87;background:#F3FBF9}
+
+.app{display:flex;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;width:248px;flex:none;background:#fff;border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:22px;z-index:5}
+.sbrand{display:flex;gap:10px;align-items:center;padding:0 8px}
+.sbrand i{width:12px;height:12px;border-radius:50%;background:var(--roxo);box-shadow:0 0 0 5px rgba(139,92,246,.18)}
+.sbrand b{font-family:Montserrat;font-weight:900;font-size:16px;display:block}
+.sbrand small{font-size:12px;color:var(--tx3);font-weight:600}
+.snav{display:flex;flex-direction:column;gap:4px}
+.snav button{font:inherit;display:flex;gap:12px;align-items:center;border:0;background:none;border-radius:12px;padding:12px 12px;font-size:15px;font-weight:700;color:var(--tx2);cursor:pointer;text-align:left;transition:background .15s,color .15s}
+.snav button svg{width:20px;height:20px;flex:none}
+.snav button:hover{background:var(--bg);color:var(--tx)}
+.snav button.on{background:#F1ECFA;color:var(--roxo2)}
+.sstore{display:flex;flex-direction:column;gap:7px;padding:16px 8px 0;border-top:1px solid var(--line)}
+.sstore label{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx3)}
+.sstore input{font:inherit;background:var(--bg);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:11px 13px;font-size:15px;outline:none;width:100%}
+.sstore input:focus{border-color:var(--roxo);box-shadow:0 0 0 4px rgba(139,92,246,.2)}
+.sstore small{font-size:12px;color:var(--tx3)}
+.sfoot{margin-top:auto;font-size:11.5px;color:var(--tx3);padding:0 8px}
+.app>.wrap{flex:1;min-width:0;margin:0}
+.page{display:none}.page.on{display:block;animation:pgin .25s ease}
+@keyframes pgin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#pg-vm .vm,#pg-lib .lib{margin-top:0}
+@media(max-width:860px){
+ .app{flex-direction:column}
+ .side{position:sticky;top:0;height:auto;width:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-right:0;border-bottom:1px solid var(--line)}
+ .sbrand small,.sfoot{display:none}
+ .snav{flex-direction:row;flex:1;justify-content:flex-end}
+ .snav button{padding:9px 10px;font-size:13px;gap:6px}
+ .sstore{order:3;flex-basis:100%;flex-direction:row;align-items:center;border-top:0;padding:0}
+ .sstore label{white-space:nowrap}.sstore small{display:none}
+}
+@media(max-width:520px){.snav button span{display:none}.snav button{padding:10px 12px}}
+
+/* ---- COMPACTO ---- */
+.wd .ws{display:none}
+.hero{margin-bottom:24px;gap:24px}
+.hero h1{font-size:clamp(40px,5.6vw,72px)}
+.hero p{font-size:15.5px;margin:0}
+.count{padding:12px 14px}.count b{font-size:26px}.count small{font-size:11px}
+.grid{gap:8px}
+.day{min-height:108px;padding:11px;gap:6px;border-radius:14px}
+.day .num{font-size:22px}
+.day .ttl{font-size:12.5px;line-height:1.3}
+.ic{width:24px;height:24px;border-radius:7px}.ic svg{width:13px;height:13px}
+.day.deadline::after{top:9px;right:9px;font-size:9px;padding:3px 6px}
+.bands{column-gap:8px}
+.band{padding:6px 10px;font-size:12px}
+@media (max-width:760px){
+  .wrap{padding:14px 12px 40px}
+  .hero{display:block;margin-bottom:14px}
+  .hero .eyebrow{font-size:10px;letter-spacing:2.5px}
+  .hero h1{font-size:34px;letter-spacing:-1px;margin:6px 0 8px;display:flex;gap:10px;align-items:baseline}
+  .hero h1 span{display:inline}
+  .hero p{font-size:13.5px;line-height:1.45}
+  .counts{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px}
+  .count{padding:9px 6px;border-radius:12px;text-align:center}
+  .count b{font-size:19px}
+  .count small{font-size:8.5px;letter-spacing:.2px;line-height:1.15;display:block;margin-top:3px}
+  .filters{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:0 -12px 10px;padding:0 12px 4px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .chip{flex:none;padding:7px 11px;font-size:12px}
+  .note{font-size:12px;margin:0 0 10px}
+  .grid{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .wd{display:block!important;text-align:center;font-size:10px;letter-spacing:1px;padding:0 0 2px}
+  .wd .wl{display:none}.wd .ws{display:inline}
+  .day.empty{display:block;min-height:0}
+  .day{display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;min-height:58px;padding:7px 2px 6px;gap:4px;border-radius:10px;box-shadow:none}
+  .day .num{font-size:17px;grid-row:auto}
+  .day .wdm,.day .ttl,.day .wetag{display:none}
+  .day .ics{grid-row:auto;grid-column:auto;margin:auto 0 0;gap:3px;justify-content:center;flex-wrap:wrap}
+  .day .ics .ic{width:7px;height:7px;border-radius:50%;padding:0;background:currentColor!important}
+  .day .ics .ic svg{display:none}
+  .day.big .ttl{display:block;font-size:7.5px;letter-spacing:.3px;text-align:center}
+  .day.deadline::after{content:"";top:5px;right:5px;width:7px;height:7px;padding:0;border-radius:50%;background:#1E1535}
+  .day.we{background:repeating-linear-gradient(135deg,#fff 0 6px,#F6F2FC 6px 12px)}
+  .bands{grid-template-columns:1fr;row-gap:4px;margin:0 0 4px}
+  .band{grid-column:1/-1!important;white-space:nowrap;padding:5px 9px;font-size:11px;border-radius:7px}
+  .band svg{width:12px;height:12px}
+  .foot{display:none}
+  .mhint{display:block}
+  /* drawer */
+  .dhead{position:relative;gap:12px;padding:14px 14px 12px;flex-wrap:wrap}
+  .dnum{font-size:38px}
+  .dmeta{min-width:0;padding-right:0}
+  .dmeta .wdl{font-size:10.5px;letter-spacing:1.2px;padding-right:120px;min-height:36px;display:flex;align-items:center}
+  .dmeta h2{font-size:17px;line-height:1.25;margin:4px 0 6px}
+  .dhead .nav{position:absolute;top:12px;right:12px;gap:5px}
+  .close{width:36px;height:36px;border-radius:10px}
+  .close svg{width:15px;height:15px}
+  .tag{font-size:10px;padding:3px 6px}
+  .rangebox{width:100%;font-size:12px;padding:7px 10px;margin-top:8px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;padding:10px 14px 0;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;padding:8px 11px;font-size:12px}
+  .dbody{padding:14px 14px 40px}
+  .phone{width:250px;height:510px}
+}
+.mhint{display:none;font-size:12px;color:var(--tx3);text-align:center;margin:10px 0 0}
+
+/* ---- CORES + LEITURA MOBILE ---- */
+body{background:#fff}
+.sls{display:none}
+.side{background:linear-gradient(180deg,#6D28D9 0%,#5B21B6 100%);border-right:0;color:#fff}
+.sbrand b{color:#fff}.sbrand small{color:rgba(255,255,255,.7)}
+.sbrand i{background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.22)}
+.snav button{color:rgba(255,255,255,.78)}
+.snav button:hover{background:rgba(255,255,255,.12);color:#fff}
+.snav button.on{background:#fff;color:#5B21B6}
+.sstore{border-top-color:rgba(255,255,255,.2)}
+.sstore label{color:rgba(255,255,255,.75)}
+.sstore input{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff}
+.sstore input::placeholder{color:rgba(255,255,255,.6)}
+.sstore input:focus{border-color:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.18)}
+.sstore small,.sfoot{color:rgba(255,255,255,.6)}
+.day{box-shadow:0 1px 0 #EDE6F8}
+.day.we{background:repeating-linear-gradient(135deg,#fff 0 10px,#F8F5FD 10px 20px)}
+.count{background:#FAF8FE}
+@media (max-width:760px){
+  .wrap{padding:14px 8px 40px}
+  .grid{gap:3px}
+  .day{min-height:84px;padding:6px 2px 5px;gap:3px;border-radius:9px}
+  .day .num{font-size:16px}
+  .day .ics{display:none}
+  .sls{display:flex;flex-direction:column;gap:2px;width:100%;padding:0 2px;margin-top:2px}
+  .sl{display:block;font-size:9.5px;font-weight:800;line-height:1.15;padding:3px 1px;border-radius:4px;text-align:center;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .day.big .ttl{font-size:8.5px}
+  .day.we .sls{margin-top:2px}
+  .band{font-size:11.5px;padding:6px 9px}
+  .side{padding:10px 12px}
+}
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<div class="app">
+<nav class="side" aria-label="Menu">
+  <div class="sbrand"><i></i><div><b>Dezembro 2026</b><small>Aure Digital</small></div></div>
+  <div class="snav">
+    <button data-pg="cal" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>Calendário</span></button>
+    <button data-pg="vm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span>Vender mais</span></button>
+    <button data-pg="lib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h4l2 3h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg><span>Referências</span></button>
+  </div>
+  <div class="sstore"><label for="storeName">Nome da loja</label><input id="storeName" placeholder="Ex.: Aure Digital" autocomplete="off"><small>Entra sozinho nos disparos, roteiros e falas.</small></div>
+  <div class="sfoot">Aure Digital · Planejamento Dezembro 2026</div>
+</nav>
+<main class="wrap">
+  <div class="page on" id="pg-cal">
   <header class="hero">
     <div>
       <div class="eyebrow">AURE DIGITAL · CALENDÁRIO INTERATIVO</div>
       <h1 class="mont">Dezembro<span>2026</span></h1>
       <p>Clique num dia ou numa faixa pra ver como o disparo chega no WhatsApp do cliente e os roteiros dos vídeos que a loja precisa enviar pros anúncios.</p>
-      <div class="store">
-        <label for="storeName">Nome da loja</label>
-        <input id="storeName" placeholder="Ex.: Aure Digital" autocomplete="off">
-      </div>
       </div>
     <div class="counts">
       <div class="count"><b id="cNatal">–</b><small>DIAS PRO NATAL</small></div>
@@ -297,9 +498,14 @@ button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(3
 
   <section class="cal" aria-label="Calendário de dezembro">
     <div class="grid" id="grid"></div>
+    <p class="mhint">Toque num dia ou numa faixa pra abrir o guia.</p>
   </section>
 
-  <div class="foot"><span>Toque num dia pra abrir o guia completo.</span><span>Aure Digital · Planejamento Dezembro 2026</span></div>
+    <div class="foot"><span>Toque num dia pra abrir o guia completo.</span><span>Aure Digital · Planejamento Dezembro 2026</span></div>
+  </div>
+  <div class="page" id="pg-vm"><section class="vm" id="vm" aria-label="Vender mais em dezembro"></section></div>
+  <div class="page" id="pg-lib"><section class="lib" id="lib" aria-label="Biblioteca de referências"></section></div>
+</main>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -322,6 +528,7 @@ button.band:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(3
   <div class="dbody" id="dBody"></div>
 </aside>
 <div class="toast" id="toast" role="status"></div>
+<div class="lbx" id="lbx" role="dialog" aria-modal="true" aria-labelledby="lbxTitle"><div class="lbxin"><div class="lbxhead"><b id="lbxTitle"></b><a class="btn ghost" id="lbxDl" target="_blank" rel="noopener">Abrir em nova aba</a><button class="close" id="lbxX" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="lbxbody" id="lbxBody"></div></div></div>
 
 <script>
 /* ---------- ICONS ---------- */
@@ -337,6 +544,7 @@ const I = {
   story:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 7h4M9 12h6"/></svg>',
   wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-13.5 7.8L3 21l1.2-4.4A9 9 0 1121 12z"/></svg>',
   list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 17v3h16v-3"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>',
   replay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
@@ -400,6 +608,15 @@ const VSETS = {
 };
 
 /* ---------- DAYS ---------- */
+const SHORT = {
+  ant1:['IMG','🎁 Antecipe o presente de Natal e escolha com calma na {loja}! Quer que eu te mande as opções?'],
+  ant2:['IMG','⏰ Faltam 9 dias pro Natal! Reserva aqui pelo WhatsApp e retira já embrulhado na {loja} 🎁'],
+  dic1:['IMG','🎁 Separei dicas de presente pra mãe, pra ele, pras crianças e pro amigo secreto. Me diz pra quem é que eu te mando as fotos 😉'],
+  dic2:['IMG','💡 Sem ideia de presente? Me fala quanto quer gastar que eu te mando as opções da {loja} 🎁'],
+  dic3:['IMG','🎄 Esses foram os presentes mais escolhidos da semana na {loja}. Quer que eu separe o seu?'],
+  hor1:['🕒 Neste fim de semana a {loja} abre em horário especial: sábado (12/12) [HORÁRIO] e domingo (13/12) [HORÁRIO]. Te esperamos!'],
+  hor2:['🎄 Último fim de semana antes do Natal! Sábado (19/12) [HORÁRIO] e domingo (20/12) [HORÁRIO]. Reserva aqui e só passa pra retirar 🎀']
+};
 const MSG = {
   ant1:['IMG','🎁 *Antecipe o seu presente de Natal!*\n\nQuem compra agora escolhe com calma, encontra todos os números e foge da fila de dezembro 😉\n\nNa {loja} você já encontra:\n✨ Novidades de Natal\n🎀 Embalagem de presente na hora\n💳 Parcelamento facilitado\n\nQuer que eu te mande as opções? Responde aqui!'],
   ant2:['IMG','⏰ *Faltam 9 dias pro Natal!*\n\nAinda dá tempo de garantir o presente com calma, antes da correria da última semana.\n\nReserva pelo WhatsApp e retira na {loja} já embrulhado 🎁\n\nMe conta pra quem é o presente que eu te ajudo a escolher 😊'],
@@ -495,10 +712,10 @@ const WD = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
 const order = Object.keys(D).map(Number);
 
 /* ---------- STATE ---------- */
-const S = {store:'', filter:null, day:null, tab:null, timers:[]};
+const S = {store:'', filter:null, day:null, tab:null, timers:[], ver:'completa'};
 try{S.store = localStorage.getItem('aure_dez_store')||''}catch(e){}
 const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fill = s => s.replace(/\{loja\}/g, S.store.trim() || 'sua loja');
 const fmtWA = s => esc(fill(s)).replace(/\*(.+?)\*/g,'<b>$1</b>');
 
@@ -519,9 +736,11 @@ function applyFilter(){
 }
 
 /* ---------- GRID ---------- */
+const SL={prazo:'Vídeos',dica:'Dica',vip:'VIP',natal:'Disparo',rev:'Disparo',data:'No ar'};
+function shortLabels(d){const seen=new Set();return d.tg.map(t=>{let l=(t==='prazo'&&d.dead)?'Prazo':SL[t];if(seen.has(l))return '';seen.add(l);return `<span class="sl" style="background:${TY[t].c}1a;color:${t==='rev'?'#8A5A00':TY[t].c}">${l}</span>`}).join('')}
 function renderGrid(){
   const g=$('#grid');g.innerHTML='';
-  WD.forEach(w=>{const x=document.createElement('div');x.className='wd';x.textContent=w.toUpperCase();g.appendChild(x)});
+  WD.forEach(w=>{const x=document.createElement('div');x.className='wd';x.innerHTML=`<span class="wl">${w.toUpperCase()}</span><span class="ws">${w.slice(0,3).toUpperCase()}</span>`;g.appendChild(x)});
   const cells=[null,...order,null,null];const now=new Date();
   cells.forEach((n,i)=>{
     if(n===null){const e=document.createElement('div');e.className='day empty';g.appendChild(e)}
@@ -532,7 +751,7 @@ function renderGrid(){
       b.dataset.d=n;
       b.setAttribute('aria-label',`${d.label||n} de ${d.month==='jan'?'janeiro':'dezembro'}: ${d.t}`);
       const ics=d.tg.map(t=>`<span class="ic" style="background:${TY[t].c}1f;color:${TY[t].c}" title="${TY[t].n}">${I[TY[t].i]}</span>`).join('');
-      b.innerHTML=`<span class="num mont">${d.label||n}</span><span class="wdm">${WD[n%7]}</span><span class="ttl">${esc(d.t)}</span>${d.we&&!d.big?'<span class="wetag">SEM SUBIDA DE ANÚNCIOS</span>':''}<span class="ics">${d.big?'':ics}</span>`;
+      b.innerHTML=`<span class="num mont">${d.label||n}</span><span class="wdm">${WD[n%7]}</span><span class="ttl">${esc(d.t)}</span>${d.we&&!d.big?'<span class="wetag">SEM SUBIDA DE ANÚNCIOS</span>':''}<span class="ics">${d.big?'':ics}</span><span class="sls">${d.big?'':shortLabels(d)}</span>`;
       if(has)b.onclick=()=>openDay(n);else b.classList.add('static');g.appendChild(b);
     }
     if(i%7===6){
@@ -573,6 +792,7 @@ function tabsFor(d){
   if(d.vipmsg)t.push(['vipwa','Mensagem no VIP','crown']);
   if(d.video)t.push(['video','Roteiros de vídeo','video']);
   if(d.story)t.push(['story','Roteiro dos stories','story']);
+  if(t.length)t.push(['refs','Referências','camera']);
   return t;
 }
 function openRange(k){S.day='r:'+k;show()}
@@ -592,7 +812,7 @@ function show(){
   $('#dTags').innerHTML=d.tg.map(t=>`<span class="tag" style="background:${TY[t].c};color:${TY[t].t}">${TY[t].n}</span>`).join('');
   $('#dRange').innerHTML=d.rg?`<button class="rangebox" id="goRange">${I.clock}<span>Faz parte de: ${esc(d.rg.t)}${d.rg.prazo?' · prazo '+esc(d.rg.prazo):''}</span></button>`:'';
   if(d.rg)$('#goRange').onclick=()=>openRange(D[n].range);
-  renderTabs(tabs);renderPane();
+  renderTabs(tabs);renderPane();refreshRefs();
   $('#drawer').classList.add('on');$('#scrim').classList.add('on');$('#drawer').setAttribute('aria-hidden','false');
   setTimeout(()=>$('#closeD').focus(),50);
 }
@@ -603,7 +823,7 @@ function step(dir){if(typeof S.day==='string'){const f=({pNatal:1,pRev:7,vip:14}
 function renderTabs(tabs){
   const w=$('#tabs');w.innerHTML='';
   tabs.forEach(([k,l,ic])=>{const b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');b.setAttribute('aria-selected',S.tab===k);
-    b.innerHTML=I[ic]+l;b.onclick=()=>{S.tab=k;renderTabs(tabs);renderPane()};w.appendChild(b)});
+    b.dataset.k=k;b.innerHTML=I[ic]+l+(k==='refs'?` <em style="font-style:normal;opacity:.8">${refsFor(scopesOfCurrent()).length?'('+refsFor(scopesOfCurrent()).length+')':''}</em>`:'');b.onclick=()=>{S.tab=k;renderTabs(tabs);renderPane()};w.appendChild(b)});
 }
 function clearTimers(){S.timers.forEach(t=>clearTimeout(t));S.timers=[]}
 function later(fn,ms){S.timers.push(setTimeout(fn,ms))}
@@ -618,7 +838,7 @@ function attachPhoneTilt(){
 function renderPane(){
   clearTimers();const d=cur();const body=$('#dBody');let h='';
   if(S.tab==='wa'||S.tab==='vipwa'){
-    const key=S.tab==='wa'?d.msg:d.vipmsg;const msgs=MSG[key];
+    const key=S.tab==='wa'?d.msg:d.vipmsg;const hasV=S.tab==='wa'&&!!SHORT[key];const msgs=(hasV&&S.ver==='curta')?SHORT[key]:MSG[key];
     const isVip=S.tab==='vipwa'||d.kind==='vip';
     const kind=isVip?'vip':d.kind;
     const color={natal:'#F0545A',rev:'#F5B83D',vip:'#2EC4A6',loja:'#8B5CF6'}[kind]||'#8B5CF6';
@@ -626,7 +846,7 @@ function renderPane(){
     const head=isVip?`<div class="avatar" style="background:linear-gradient(135deg,#2EC4A6,#0B5E55)">${I.crown.replace('currentColor','#fff')}</div><div><div class="wname">VIP ${esc(name)}</div><div class="wsub">grupo · 128 participantes</div></div>`
       :`<div class="avatar">${esc(name.slice(0,1).toUpperCase())}</div><div><div class="wname">${esc(name)}</div><div class="wsub">conta comercial</div></div>`;
     h=`<div class="pane"><div>${phone(`<div class="wahead">${head}</div><div class="chat" id="chat"><div class="daychip">${d.label||S.day} de dezembro</div></div><div class="wafoot"><div>Mensagem</div><span>${I.mic}</span></div>`)}</div>
-      <div>${!isVip&&d.tema?`<div class="tema">TEMA · ${esc(d.tema.toUpperCase())}</div>`:''}<h3>${isVip?'Como a mensagem chega no Grupo VIP':'Como o cliente recebe o disparo'}</h3>
+      <div>${!isVip&&d.tema?`<div class="tema">TEMA · ${esc(d.tema.toUpperCase())}</div>`:''}<h3>${isVip?'Como a mensagem chega no Grupo VIP':'Como o cliente recebe o disparo'}</h3>${hasV?`<div class="vers"><button data-v="completa" class="${S.ver!=='curta'?'on':''}">Versão completa</button><button data-v="curta" class="${S.ver==='curta'?'on':''}">Versão curta</button></div><p class="vnote">Alterne entre as duas pra que nem todas as lojas mandem o mesmo texto. A curta funciona melhor pra quem já é cliente; a completa, pra base fria.</p>`:''}
       <p class="lead">Simulação do WhatsApp do cliente. ${msgs.includes('IMG')?'A mensagem vai com a foto que a loja enviou pra Aure, seguida do texto.':'Mensagem só de texto, curta e direta.'} Troque os campos entre colchetes antes de enviar.</p>
       <div class="msgbox" id="msgTxt">${fmtWA(msgs.filter(m=>m!=='IMG').join('\n\n'))}</div>
       <div class="row"><button class="btn" id="cpy">${I.copy}Copiar mensagem</button><button class="btn ghost" id="rpl">${I.replay}Ver de novo</button></div>
@@ -637,6 +857,7 @@ function renderPane(){
     body.innerHTML=h;attachPhoneTilt();
     $('#cpy').onclick=()=>copy(msgs.filter(m=>m!=='IMG').map(fill).join('\n\n'));
     $('#rpl').onclick=()=>playChat(msgs,color);
+    body.querySelectorAll('.vers button').forEach(b=>b.onclick=()=>{S.ver=b.dataset.v;renderPane();});
     playChat(msgs,color);
   }
   else if(S.tab==='story'){
@@ -666,12 +887,7 @@ function renderPane(){
     $('#cpyAll').onclick=()=>copy(v.r.map(txt).join('\n\n———\n\n'));
     document.querySelectorAll('.rcp').forEach(b=>b.onclick=()=>copy(txt(v.r[+b.dataset.i],+b.dataset.i)));
   }
-  else{
-    let done={};try{done=JSON.parse(localStorage.getItem('aure_dez_ck')||'{}')}catch(e){}
-    h=`<div style="max-width:640px;animation:paneIn .5s"><h3 style="margin:0 0 6px;font-size:20px">${d.isRange?'O que a loja faz nesse período':'O que a loja faz neste dia'}</h3><p class="lead">Marque conforme for fazendo. Fica salvo neste aparelho.</p><div class="check">${d.loja.map((x,i)=>{const id=S.day+'_'+i;return `<button class="ck" data-id="${id}" aria-pressed="${!!done[id]}"><span class="box">${I.check}</span><span>${esc(x)}</span></button>`}).join('')}</div></div>`;
-    body.innerHTML=h;
-    document.querySelectorAll('.ck').forEach(b=>b.onclick=()=>{const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);done[b.dataset.id]=v;try{localStorage.setItem('aure_dez_ck',JSON.stringify(done))}catch(e){}});
-  }
+  else if(S.tab==='refs'){body.innerHTML=paneRefsHTML();bindRefs(body)}
 }
 
 function playChat(msgs,color){
@@ -722,12 +938,188 @@ function countdown(){
 }
 
 
+/* ---------- REFERÊNCIAS (arquivos) ---------- */
+const R = {db:null, assets:null, canEdit:false, list:[], ready:false, failed:false, filter:'all', uploading:0};
+const SCOPES = {geral:'Geral (todas as datas)',pNatal:'Produção de Natal',pRev:'Produção de Réveillon',vip:'Grupo VIP'};
+const scopeName = s => SCOPES[s] || (s && s[0]==='d' ? `Dia ${s.slice(1)}/12` : 'Geral');
+const kindOf = t => /^video\//.test(t)?'video':/^image\//.test(t)?'foto':/pdf/.test(t)?'pdf':'outro';
+const KIND = {video:{n:'Vídeo',i:'video'},foto:{n:'Foto',i:'camera'},pdf:{n:'PDF',i:'list'},outro:{n:'Arquivo',i:'list'}};
+const safeUrl = u => (typeof u==='string' && (u.startsWith('/_blob/')||u.startsWith('https://'))) ? u : '';
+
+async function initRefs(){
+  try{
+    const [db,assets,user]=await Promise.all([claude.use('db'),claude.use('assets'),claude.use('user')]);
+    R.db=db;R.assets=assets;R.canEdit=!!(assets && user && await user.canEdit());
+  }catch(e){}
+  if(!R.db){R.failed=true;refreshRefs();return}
+  const timer=setTimeout(()=>{if(!R.ready){R.failed=true;refreshRefs()}},10000);
+  R.db.collection('refs').orderBy('createdAt','desc').onSnapshot(snap=>{
+    R.list=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+    if(!snap.metadata.fromCache){R.ready=true;R.failed=false;clearTimeout(timer)}else if(!R.ready)R.ready=true;
+    refreshRefs();
+  },()=>{clearTimeout(timer);R.failed=true;refreshRefs()});
+}
+function refsFor(scopes){return R.list.filter(r=>scopes.includes(r.scope))}
+function scopesOfCurrent(){
+  if(typeof S.day==='string')return [S.day.slice(2)];
+  const d=D[S.day];return ['d'+S.day].concat(d&&d.range?[d.range]:[]);
+}
+function uploadScopeOfCurrent(){return typeof S.day==='string'?S.day.slice(2):'d'+S.day}
+
+function refCard(r){
+  const k=kindOf(r.type||'');const url=safeUrl(r.url);
+  const thumb=k==='foto'&&url?`<img src="${esc(url)}" alt="" loading="lazy">`:k==='video'&&url?`<video src="${esc(url)}#t=0.5" muted preload="metadata"></video><span class="play">${I.video}</span>`:`<span class="pdfic">${I[KIND[k].i]}<b>${KIND[k].n}</b></span>`;
+  return `<div class="rcard"><button class="rthumb" data-open="${esc(r.id)}" aria-label="Abrir ${esc(r.title||'arquivo')}">${thumb}</button>
+    <div class="rinfo"><b>${esc(r.title||'Sem nome')}</b><small>${KIND[k].n} · ${esc(scopeName(r.scope))}</small></div>
+    ${R.canEdit?`<button class="rdel" data-del="${esc(r.id)}" aria-label="Excluir ${esc(r.title||'arquivo')}">Excluir</button>`:''}</div>`;
+}
+function uploader(scope,withSelect){
+  if(!R.canEdit)return '';
+  const sel=withSelect?`<label class="upsel">Ligar a <select id="upScope">${Object.entries(SCOPES).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('')}</select></label>`:'';
+  return `<div class="upz"><label class="btn"><input type="file" class="upin" data-scope="${esc(scope)}" multiple accept="video/*,image/*,application/pdf" hidden>${I.up}Adicionar vídeo, foto ou PDF</label>${sel}<span class="uphint">Até 20 MB por arquivo${R.uploading?` · enviando ${R.uploading}…`:''}</span></div>`;
+}
+function stateNote(){
+  if(R.failed)return `<p class="lead">As referências aparecem na versão online do calendário, com a conta conectada.</p>`;
+  if(!R.ready)return `<p class="lead">Carregando referências…</p>`;
+  return '';
+}
+function libraryHTML(){
+  const items=R.list.filter(r=>R.filter==='all'||kindOf(r.type||'')===R.filter);
+  const fil=[['all','Todos'],['video','Vídeos'],['foto','Fotos'],['pdf','PDFs']].map(([k,n])=>`<button class="vbtn" data-lf="${k}" aria-pressed="${R.filter===k}">${n}</button>`).join('');
+  return `<div class="libhead"><div><div class="eyebrow">BIBLIOTECA</div><h2 class="mont">Referências e roteiros prontos</h2><p class="lead" style="margin:4px 0 0">Vídeos e fotos de referência e PDFs com outras sugestões de roteiro.</p></div></div>
+    ${uploader('geral',true)}<div class="vids" style="margin-top:14px">${fil}</div>
+    ${stateNote()}${R.ready&&!items.length?'<p class="lead">Nenhum arquivo por aqui ainda.</p>':''}
+    <div class="rgrid">${items.map(refCard).join('')}</div>`;
+}
+function paneRefsHTML(){
+  const items=refsFor(scopesOfCurrent());
+  return `<div class="script"><div class="shead"><div><div class="eyebrow">REFERÊNCIAS</div><h3>Vídeos, fotos e PDFs deste ${typeof S.day==='string'?'período':'dia'}</h3></div></div>
+    ${uploader(uploadScopeOfCurrent(),false)}${stateNote()}${R.ready&&!items.length?'<p class="lead">Nenhuma referência ligada aqui ainda. Os PDFs gerais ficam na página Referências, no menu lateral.</p>':''}
+    <div class="rgrid">${items.map(refCard).join('')}</div></div>`;
+}
+function bindRefs(root){
+  root.querySelectorAll('.upin').forEach(inp=>inp.onchange=()=>{const sc=inp.dataset.scope==='geral'&&$('#upScope')?$('#upScope').value:inp.dataset.scope;doUpload([...inp.files],sc);inp.value=''});
+  root.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openRef(b.dataset.open));
+  root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.armed){delRef(b.dataset.del);return}
+    b.dataset.armed='1';b.textContent='Confirmar';b.classList.add('armed');setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Excluir';b.classList.remove('armed')}},4000);
+  });
+  root.querySelectorAll('[data-lf]').forEach(b=>b.onclick=()=>{R.filter=b.dataset.lf;refreshRefs()});
+}
+async function doUpload(files,scope){
+  if(!R.assets||!R.db)return;
+  for(const f of files){
+    if(f.size>20*1024*1024){toast(`${f.name}: maior que 20 MB`);continue}
+    R.uploading++;refreshRefs();
+    try{
+      const a=await R.assets.upload(f);
+      await R.db.collection('refs').add({scope,title:f.name.replace(/\.[^.]+$/,''),assetId:a.id,url:a.url,type:a.contentType||f.type,size:a.sizeBytes||f.size,createdAt:Date.now()});
+      toast('Arquivo adicionado');
+    }catch(e){toast(e&&e.code==='quota_exceeded'?'Espaço cheio: exclua arquivos antigos':'Não deu pra enviar '+f.name)}
+    R.uploading--;refreshRefs();
+  }
+}
+async function delRef(id){
+  const r=R.list.find(x=>x.id===id);if(!r)return;
+  try{await R.db.collection('refs').doc(id).delete();if(r.assetId&&R.assets)await R.assets.delete(r.assetId).catch(()=>{});toast('Arquivo excluído')}catch(e){toast('Não deu pra excluir')}
+}
+function openRef(id){
+  const r=R.list.find(x=>x.id===id);if(!r)return;const url=safeUrl(r.url);if(!url)return;const k=kindOf(r.type||'');
+  if(k==='pdf'||k==='outro'){window.open(url,'_blank','noopener');return}
+  const box=$('#lbx');const body=$('#lbxBody');body.innerHTML='';
+  const el=document.createElement(k==='video'?'video':'img');el.src=url;if(k==='video'){el.controls=true;el.autoplay=true;el.playsInline=true}else el.alt=r.title||'';
+  body.appendChild(el);$('#lbxTitle').textContent=r.title||'';$('#lbxDl').href=url;box.classList.add('on');
+}
+function closeLbx(){const b=$('#lbx');b.classList.remove('on');$('#lbxBody').innerHTML=''}
+function refreshRefs(){
+  const lib=$('#lib');if(lib){lib.innerHTML=libraryHTML();bindRefs(lib)}
+  if(S.day&&S.tab==='refs'){const b=$('#dBody');b.innerHTML=paneRefsHTML();bindRefs(b)}
+  if(S.day){const t=[...document.querySelectorAll('.tab')].find(x=>x.dataset.k==='refs');if(t){const n=refsFor(scopesOfCurrent()).length;t.querySelector('em').textContent=n?`(${n})`:''}}
+}
+
 /* ---------- INIT ---------- */
 const inp=$('#storeName');inp.value=S.store;
-inp.addEventListener('input',()=>{S.store=inp.value;try{localStorage.setItem('aure_dez_store',S.store)}catch(e){};if(S.day&&(S.tab==='wa'||S.tab==='vipwa'))renderPane()});
+inp.addEventListener('input',()=>{S.store=inp.value;try{localStorage.setItem('aure_dez_store',S.store)}catch(e){};if(S.day&&(S.tab==='wa'||S.tab==='vipwa'))renderPane();clearTimeout(window._vmT);window._vmT=setTimeout(()=>{const t=document.getElementById('tgrid');if(t&&typeof vmTactics==='function'){t.innerHTML=vmTactics();renderVM()}},250)});
 $('#closeD').onclick=closeDay;$('#scrim').onclick=closeDay;$('#prevD').onclick=()=>step(-1);$('#nextD').onclick=()=>step(1);
-addEventListener('keydown',e=>{if(!S.day)return;if(e.key==='Escape')closeDay();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
-renderFilters();renderGrid();countdown();
+addEventListener('keydown',e=>{if($('#lbx').classList.contains('on')){if(e.key==='Escape')closeLbx();return}if(!S.day)return;if(e.key==='Escape')closeDay();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
+
+/* ---------- VENDER MAIS ---------- */
+const VK={
+ fluxo:{n:'Fluxo de loja',c:'#0F9F87'},
+ pa:{n:'PA',c:'#6D28D9'},
+ tk:{n:'Ticket médio',c:'#D98E04'},
+ spa:{n:'Sapatos por atendimento',c:'#E0353C'},
+ bpa:{n:'Bolsas por atendimento',c:'#1E1535'}
+};
+const VT=[
+ {k:'fluxo',t:'Vitrine "Presentes até R$[VALOR]"',p:'Em dezembro o cliente entra quando enxerga o presente resolvido. Vitrine dividida por faixa de preço faz quem passa na frente parar e entrar.',h:'Troque a vitrine no dia 7, junto com os anúncios de Natal no ar. Três faixas, com o preço grande e visível.',f:'Pode entrar, os presentes até R$[VALOR] estão aqui na frente. Pra quem você está procurando?'},
+ {k:'fluxo',t:'Retirada na loja já embrulhado',p:'Quem reserva pelo WhatsApp precisa ir até a loja buscar. Cada retirada é uma visita, e uma visita vira chance de vender mais uma peça.',h:'Ofereça em todo atendimento de WhatsApp e nos disparos. Deixe os pacotes num balcão perto das novidades, não no caixa.',f:'Deixo separado e embrulhado no seu nome. Quando vier buscar, já te mostro o que chegou pra combinar.'},
+ {k:'fluxo',t:'Fim de semana de horário especial',p:'Os dois fins de semana antes do Natal concentram o maior movimento do mês. Horário maior e equipe completa evitam perder cliente na fila.',h:'Divulgue o horário nos disparos de 11 e 18/12. Escala com todo mundo no sábado à tarde.',f:'Neste fim de semana a gente abre até [HORÁRIO]. Quer que eu deixe algo separado pra você?'},
+ {k:'pa',t:'Presente + mimo pra quem compra',p:'Quem compra presente pros outros quase sempre leva algo pra si quando alguém oferece. Basta perguntar no momento certo.',h:'Depois de fechar o presente, antes de ir pro caixa. Toda venda de presente recebe a pergunta.',f:'E pra você, já escolheu o seu de Natal? Chegou essa [PEÇA] que é a sua cara.'},
+ {k:'pa',t:'Lista de presentes no atendimento',p:'Pergunte logo no início pra quantas pessoas a pessoa vai comprar. Quem tem uma lista resolve mais de um presente na mesma visita.',h:'Primeira pergunta do atendimento em dezembro. Anote os nomes e vá resolvendo um por um.',f:'Pra quantas pessoas você vai comprar presente este ano? Me fala que a gente resolve a lista toda hoje.'},
+ {k:'pa',t:'Leve 2 com condição de Natal',p:'Segunda peça com desconto ou brinde. O cliente sente que ganhou e o PA sobe sem derrubar a margem.',h:'Aplique nas linhas de amigo secreto e presentes até R$[VALOR]. Deixe uma plaquinha no balcão.',f:'Levando duas, a segunda sai com [X]% de desconto. Já resolve o amigo secreto também?'},
+ {k:'tk',t:'Brinde acima de um valor',p:'Defina um valor 20% a 30% acima do ticket médio atual e dê um brinde a partir dele. A Se o ticket é R$250, o brinde vem acima de R$320.',h:'Escolha um brinde que custe pouco e pareça valioso: nécessaire, carteira, meia de Natal.',f:'Faltam só R$[X] pra você ganhar a [BRINDE]. Quer ver uma peça pra completar?'},
+ {k:'tk',t:'Mostre 3 opções, começando pela do meio',p:'Boa, melhor e a melhor de todas. Começando pela intermediária, muita gente sobe uma faixa.',h:'Combine com a equipe: em dezembro ninguém mostra só uma opção nem começa pela mais barata.',f:'Separei três: essa é a mais vendida, essa é a mais confortável e essa é a top da coleção.'},
+ {k:'tk',t:'Embalagem premium',p:'Uma caixa ou sacola especial faz o presente parecer mais caro e ajuda o cliente a escolher uma peça de valor maior.',h:'Deixe a embalagem montada à vista. Ofereça grátis acima de um valor ou cobre um valor simbólico.',f:'Acima de R$[VALOR] vai nessa caixa de presente. Fica lindo pra entregar.'},
+ {k:'spa',t:'Segundo par na prova',p:'Quem prova um sapato aceita provar outro modelo se ele já estiver ao lado. Dois pares no pé dobram a chance de levar os dois.',h:'Regra da equipe: todo cliente que senta pra provar recebe pelo menos dois modelos.',f:'Trouxe também esse aqui no seu número. Prova os dois e vê qual fica melhor.'},
+ {k:'spa',t:'Sapato pra festa de fim de ano',p:'Natal e Réveillon pedem sapato novo. Quem veio comprar presente muitas vezes ainda não tem o sapato da festa.',h:'Pergunte sobre a festa em todo atendimento a partir do dia 14. Deixe sandálias de festa perto do caixa.',f:'Já tem o sapato pra noite de Natal ou pro Réveillon? Chegou essa sandália que combina com tudo.'},
+ {k:'spa',t:'Par confortável pra maratona de compras',p:'Dezembro é mês de muito tempo em pé. Tênis e rasteira confortáveis vendem bem como segunda compra.',h:'Ofereça depois do primeiro sapato fechado, como opção do dia a dia.',f:'Pra aguentar dezembro, esse tênis é muito leve. Quer provar junto?'},
+ {k:'bpa',t:'Bolsa que fecha o look',p:'O sapato escolhido já define a cor e o estilo. Mostrar a bolsa que combina vende sem esforço.',h:'Toda venda de sapato recebe a sugestão de uma bolsa da mesma cor ou estilo. Leve a bolsa até o cliente.',f:'Essa bolsa fica perfeita com o sapato que você escolheu. Olha os dois juntos.'},
+ {k:'bpa',t:'Bolsa como presente pronto',p:'Bolsa não tem numeração, por isso é o presente mais seguro pra quem não sabe o número de quem vai ganhar.',h:'Use como resposta padrão quando o cliente não souber o número. Exponha bolsas na área de presentes.',f:'Se você não sabe o número dela, bolsa é o presente que não tem erro. Posso te mostrar algumas?'},
+ {k:'bpa',t:'Kit sapato + bolsa com preço fechado',p:'Combos montados facilitam a decisão e fazem a bolsa entrar na venda como parte do presente.',h:'Monte três kits com preço menor que a soma das peças. Exponha na vitrine e mande nos disparos.',f:'No kit, o sapato com a bolsa sai por R$[Y]. Separado, sairia R$[X].'}
+];
+const VM={f:120000,fl:1500,v:400,p:560,sp:380,bo:60,filter:null,goals:{fluxo:10,pa:.2,tk:10,spa:.1,bpa:.1},done:{}};
+try{Object.assign(VM,JSON.parse(localStorage.getItem('aure_dez_vm')||'{}'));}catch(e){}
+const vmSave=()=>{try{localStorage.setItem('aure_dez_vm',JSON.stringify({f:VM.f,fl:VM.fl,v:VM.v,p:VM.p,sp:VM.sp,bo:VM.bo,goals:VM.goals,done:VM.done}))}catch(e){}};
+const brl=n=>'R$ '+Math.round(n).toLocaleString('pt-BR');
+const dec=(n,d=2)=>(isFinite(n)?n:0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+function vmCalc(){
+ const {f,fl,v,p,sp,bo,goals:g}=VM;const tk=v?f/v:0,pa=v?p/v:0,pm=p?f/p:0,cv=fl?v/fl:0,spa=v?sp/v:0,bpa=v?bo/v:0;
+ const gain={fluxo:f*g.fluxo/100,pa:v*g.pa*pm,tk:f*g.tk/100,spa:v*g.spa*pm,bpa:v*g.bpa*pm};
+ return {tk,pa,pm,cv,spa,bpa,gain};
+}
+function vmKpis(){
+ const r=vmCalc(),g=VM.goals;
+ const card=(k,val,sub,min,max,step,fmt)=>`<div class="kc"><small style="color:${VK[k].c}">${VK[k].n}</small><b>${val}</b><div class="sub">${sub}</div>
+  <input type="range" data-g="${k}" min="${min}" max="${max}" step="${step}" value="${g[k]}" aria-label="Meta de ${VK[k].n}">
+  <div class="meta"><span>Meta: ${fmt(g[k])}</span></div><div class="gain">+ ${brl(r.gain[k])} no mês</div></div>`;
+ const tot=Object.values(r.gain).reduce((a,b)=>a+b,0);
+ return `<div class="kgrid">
+  ${card('fluxo',dec(VM.fl,0)+' <span style="font-size:14px;font-weight:600;color:var(--tx3)">entradas</span>',dec(r.cv*100,1)+'% compraram','0','30','1',x=>'+'+x+'% de entradas')}
+  ${card('pa',dec(r.pa),'peças por atendimento','0','1','0.05',x=>'+'+dec(x)+' peça')}
+  ${card('tk',brl(r.tk),'por atendimento','0','30','1',x=>'+'+x+'%')}
+  ${card('spa',dec(r.spa),'sapatos por atendimento','0','0.5','0.05',x=>'+'+dec(x)+' sapato')}
+  ${card('bpa',dec(r.bpa),'bolsas por atendimento','0','0.5','0.05',x=>'+'+dec(x)+' bolsa')}
+ </div>
+ <div class="vmtot"><div><small style="font-size:11px;font-weight:800;letter-spacing:1.4px;opacity:.85">SE BATER AS METAS</small><br><b>+ ${brl(tot)}</b></div><span>Estimativa de cada indicador sozinho, com os números do mês que você colocou. Os ganhos se sobrepõem em parte, então use como direção e não como previsão.</span></div>
+ <div class="vmf">Ticket médio = faturamento ÷ atendimentos com venda · PA = peças ÷ atendimentos · Sapatos e bolsas por atendimento = pares ou bolsas ÷ atendimentos · Ganho de PA, sapatos e bolsas calculado pelo preço médio da peça (${brl(r.pm)}).</div>`;
+}
+function vmTactics(){
+ const list=VT.filter(t=>!VM.filter||t.k===VM.filter);
+ return list.map(t=>{const i=VT.indexOf(t),ok=!!VM.done[i];return `<div class="tc${ok?' ok':''}"><span class="tk" style="background:${VK[t.k].c}">${VK[t.k].n.toUpperCase()}</span><h4>${esc(fill(t.t))}</h4><p>${esc(t.p)}</p><div class="how"><b>Como aplicar:</b> ${esc(t.h)}</div><div class="fala">"${esc(fill(t.f))}"</div>
+  <div class="row" style="justify-content:space-between"><label class="done"><input type="checkbox" data-done="${i}" ${ok?'checked':''}>Vamos aplicar</label><button class="btn ghost" data-fala="${i}">${I.copy}Copiar fala</button></div></div>`}).join('');
+}
+function renderVM(){
+ const el=$('#vm');if(!el)return;
+ const inp=(id,lb,val)=>`<label>${lb}<input type="number" inputmode="numeric" min="0" data-in="${id}" value="${val}"></label>`;
+ el.innerHTML=`<div class="eyebrow">VENDER MAIS EM DEZEMBRO</div><h2>Ações pra vender mais no atendimento</h2>
+  <p class="lead" style="margin:0">Ações pra melhorar fluxo de loja, PA, ticket médio, sapatos e bolsas por atendimento em dezembro. Filtre pelo indicador, copie a fala e marque o que a loja vai aplicar.</p>
+  <div class="vchips" id="vchips">${[['','Todas as ações'],...Object.entries(VK).map(([k,v])=>[k,v.n])].map(([k,n])=>`<button data-vf="${k}" class="${(VM.filter||'')===k?'on':''}">${n}</button>`).join('')}</div>
+  <div class="tgrid" id="tgrid">${vmTactics()}</div>`;
+  el.querySelectorAll('[data-vf]').forEach(b=>b.onclick=()=>{VM.filter=b.dataset.vf||null;el.querySelectorAll('[data-vf]').forEach(x=>x.classList.toggle('on',x===b));$('#tgrid').innerHTML=vmTactics();bindT()});
+ function bindK(){el.querySelectorAll('[data-g]').forEach(r=>r.oninput=()=>{VM.goals[r.dataset.g]=+r.value;vmSave();$('#vmk').innerHTML=vmKpis();bindK();const n=el.querySelector(`[data-g="${r.dataset.g}"]`);if(n)n.focus()})}
+ function bindT(){
+  el.querySelectorAll('[data-fala]').forEach(b=>b.onclick=()=>copy(fill(VT[+b.dataset.fala].f)));
+  el.querySelectorAll('[data-done]').forEach(c=>c.onchange=()=>{const i=+c.dataset.done;if(c.checked)VM.done[i]=1;else delete VM.done[i];vmSave();c.closest('.tc').classList.toggle('ok',c.checked)});
+ }
+ bindT();
+}
+
+function goPage(pg){document.querySelectorAll('.page').forEach(e=>e.classList.toggle('on',e.id==='pg-'+pg));document.querySelectorAll('.snav button').forEach(b=>b.classList.toggle('on',b.dataset.pg===pg));try{localStorage.setItem('aure_dez_pg',pg)}catch(e){}window.scrollTo({top:0})}
+document.querySelectorAll('.snav button').forEach(b=>b.onclick=()=>goPage(b.dataset.pg));
+try{const pg=localStorage.getItem('aure_dez_pg');if(pg&&document.getElementById('pg-'+pg))goPage(pg)}catch(e){}
+renderFilters();renderGrid();countdown();renderVM();refreshRefs();initRefs();
+$('#lbxX').onclick=closeLbx;$('#lbx').onclick=e=>{if(e.target.id==='lbx')closeLbx()};
 </script>
 </body>
 </html>
